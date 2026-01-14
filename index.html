@@ -1,0 +1,1965 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>신영 프로젝트 목업</title>
+  
+  <style>
+    :root{
+      --bg:#f8fafc;
+      --panel:#ffffff;
+      --panel2:#ffffff;
+      --card:#ffffff;
+      --border:#e2e8f0;
+      --border2:#cbd5e1;
+      --text:#0f172a;
+      --muted:#64748b;
+      --accent:#3b82f6;
+      --accent2:#10b981;
+      --warn:#f59e0b;
+      --bad:#ef4444;
+      --radius:14px;
+      --shadow: 0 10px 30px rgba(15,23,42,.08);
+      --shadow2: 0 6px 18px rgba(15,23,42,.08);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", Arial, "Helvetica Neue", sans-serif;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:var(--sans);
+      background: var(--bg);
+      color:var(--text);
+    }
+    a{color:inherit; text-decoration:none}
+
+    .app{display:grid; grid-template-columns: 288px 1fr; min-height:100vh;}
+    .sidebar{
+      position:sticky; top:0; height:100vh;
+      background: var(--panel);
+      border-right:1px solid var(--border);
+      padding:18px 14px;
+    }
+    .main{padding:18px 22px 70px; background: var(--bg);}
+
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      padding:10px 10px 14px;
+      border-bottom:1px solid var(--border);
+      margin-bottom:14px;
+    }
+    .logo{
+      width:36px; height:36px; border-radius:12px;
+      background: linear-gradient(135deg, rgba(59,130,246,1), rgba(14,165,233,1));
+      box-shadow: 0 10px 20px rgba(59,130,246,.18);
+    }
+    .brand h1{font-size:14px; margin:0; line-height:1.1; letter-spacing:-.2px; font-weight:700;}
+    .brand p{margin:2px 0 0; font-size:12px; color:var(--muted)}
+
+    .nav{display:flex; flex-direction:column; gap:6px; margin-top:14px;}
+    .nav .item{
+      display:flex; align-items:center; gap:10px;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid transparent;
+      color:var(--muted);
+      cursor:pointer;
+      user-select:none;
+      background: transparent;
+      transition: background .15s ease, border-color .15s ease, color .15s ease, transform .05s ease;
+    }
+    .nav .item:hover{background: rgba(59,130,246,.07); color: var(--text); border-color: rgba(59,130,246,.18);}
+    .nav .item:active{transform: translateY(1px);}
+    .nav .item.active{background: rgba(59,130,246,.12); color: var(--text); border-color: rgba(59,130,246,.24);}
+    .pill{
+      margin-left:auto;
+      font-size:11px;
+      padding:3px 8px;
+      border:1px solid var(--border);
+      border-radius:999px;
+      color:var(--muted);
+      background:#fff;
+    }
+
+    .topbar{
+      position:sticky; top:0; z-index:5;
+      background: rgba(248,250,252,.85);
+      backdrop-filter: blur(10px);
+      border-bottom:1px solid var(--border);
+      padding:14px 0 14px;
+      margin: -18px -22px 18px;
+    }
+    .topbar-inner{padding:0 22px; display:flex; align-items:center; gap:12px; justify-content:space-between;}
+    .title{display:flex; flex-direction:column; gap:2px;}
+    .title h2{margin:0; font-size:16px; letter-spacing:-.2px; font-weight:800}
+    .title span{font-size:12px; color:var(--muted)}
+    .actions{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end}
+
+    .btn{
+      border:1px solid var(--border);
+      background:#fff;
+      color:var(--text);
+      padding:9px 12px;
+      border-radius:12px;
+      font-size:12px;
+      cursor:pointer;
+      display:inline-flex; align-items:center; gap:8px;
+      box-shadow: 0 1px 0 rgba(15,23,42,.02);
+      transition: box-shadow .15s ease, border-color .15s ease, transform .05s ease, background .15s ease;
+    }
+    .btn:hover{border-color: rgba(59,130,246,.35); box-shadow: var(--shadow2);}
+    .btn:active{transform: translateY(1px);}
+    .btn.primary{
+      background: var(--accent);
+      border-color: var(--accent);
+      color:#fff;
+      box-shadow: 0 10px 24px rgba(59,130,246,.22);
+    }
+    .btn.primary:hover{box-shadow: 0 12px 28px rgba(59,130,246,.26);}
+    .btn.good{background: rgba(16,185,129,.10); border-color: rgba(16,185,129,.30); color:#065f46;}
+    .btn.warn{background: rgba(245,158,11,.10); border-color: rgba(245,158,11,.32); color:#92400e;}
+
+    .grid{display:grid; grid-template-columns: repeat(12, 1fr); gap:14px;}
+    .card{
+      background: var(--card);
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .card .hd{
+      padding:14px 14px 12px;
+      border-bottom:1px solid var(--border);
+      display:flex; align-items:center; gap:10px; justify-content:space-between;
+      background: linear-gradient(180deg, rgba(248,250,252,1), rgba(255,255,255,1));
+    }
+    .card .hd h3{margin:0; font-size:13px; font-weight:800; letter-spacing:-.15px}
+    .card .hd .sub{color:var(--muted); font-size:12px}
+    .card .bd{padding:14px}
+
+    .kpi{display:flex; flex-direction:column; gap:6px; padding:14px;}
+    .kpi .label{font-size:12px; color:var(--muted)}
+    .kpi .value{font-size:22px; letter-spacing:-.3px; font-weight:800}
+    .kpi .meta{font-size:12px; color:var(--muted)}
+
+    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
+    .field{display:flex; flex-direction:column; gap:6px; min-width:160px; flex: 1 1 160px;}
+    .field label{font-size:12px; color:var(--muted)}
+    input, select, textarea{
+      width:100%;
+      border-radius:12px;
+      border:1px solid var(--border2);
+      background:#fff;
+      color:var(--text);
+      padding:10px 11px;
+      font-size:12px;
+      outline:none;
+      transition: border-color .15s ease, box-shadow .15s ease;
+    }
+    textarea{min-height:90px; resize:vertical}
+    input:focus,select:focus,textarea:focus{
+      border-color: rgba(59,130,246,.7);
+      box-shadow: 0 0 0 4px rgba(59,130,246,.15);
+    }
+    .hint{font-size:11px; color:var(--muted); margin-top:6px}
+    .divider{height:1px; background: var(--border); margin:14px 0}
+
+    table{width:100%; border-collapse: collapse; font-size:12px;}
+    th, td{padding:10px 10px; border-bottom:1px solid var(--border); text-align:left; vertical-align:middle;}
+    th{color:var(--muted); font-weight:700}
+    tr:hover td{background: rgba(59,130,246,.06)}
+
+    .tag{
+      display:inline-flex; align-items:center;
+      padding:3px 8px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      color:var(--muted);
+      font-size:11px;
+      white-space:nowrap;
+      background:#fff;
+    }
+    .tag.good{border-color: rgba(16,185,129,.35); color:#065f46; background: rgba(16,185,129,.08);}
+    .tag.warn{border-color: rgba(245,158,11,.45); color:#92400e; background: rgba(245,158,11,.09);}
+    .tag.bad{border-color: rgba(239,68,68,.40); color:#991b1b; background: rgba(239,68,68,.08);}
+
+    .mono{font-family:var(--mono)}
+    .muted{color:var(--muted)}
+    .twoCol{display:grid; grid-template-columns: 1.15fr .85fr; gap:14px;}
+    .section{display:none}
+    .section.active{display:block}
+
+    .modal-backdrop{
+      position:fixed; inset:0;
+      background: rgba(15,23,42,.42);
+      display:none;
+      align-items:center; justify-content:center;
+      padding:18px;
+      z-index:50;
+    }
+    .modal-backdrop.open{display:flex}
+    .modal{
+      width:min(920px, 100%);
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:18px;
+      overflow:hidden;
+      box-shadow: 0 26px 70px rgba(15,23,42,.18);
+    }
+    .modal .mhd{
+      padding:14px 14px 12px;
+      border-bottom:1px solid var(--border);
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      background: linear-gradient(180deg, rgba(248,250,252,1), rgba(255,255,255,1));
+    }
+    .modal .mhd h4{margin:0; font-size:13px; font-weight:800}
+    .modal .mbd{padding:14px}
+    .modal .mft{padding:12px 14px; border-top:1px solid var(--border); display:flex; gap:10px; justify-content:flex-end; background:#fff;}
+
+    @media (max-width: 980px){
+      .app{grid-template-columns: 1fr}
+      .sidebar{height:auto; position:relative; border-right:none; border-bottom:1px solid var(--border); background:#fff;}
+      .nav{flex-direction:row; flex-wrap:wrap}
+      .nav .item{flex:1 1 160px}
+      .topbar{margin: -18px -22px 14px}
+      .twoCol{grid-template-columns: 1fr}
+    }
+  </style>
+
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>신영 프로젝트</h1>
+          <p>실사출력 ERP · MES · 웹투프린트</p>
+        </div>
+      </div>
+
+      <div class="nav" id="nav">
+        <div class="item active" data-target="dash">대시보드 <span class="pill">Home</span></div>
+        <div class="item" data-target="orders">발주 관리 <span class="pill">핵심</span></div>
+        <div class="item" data-target="quote">견적 엔진 <span class="pill">자동+수정</span></div>
+        <div class="item" data-target="mes">제작 MES <span class="pill">현장</span></div>
+        <div class="item" data-target="ship">출고·납품 <span class="pill">바코드</span></div>
+        <div class="item" data-target="settle">정산·매출 <span class="pill">ERP</span></div>
+        <div class="item" data-target="master">마스터 <span class="pill">원단/후가공</span></div>
+        <div class="item" data-target="portal">홈페이지·쇼핑몰 <span class="pill">W2P</span></div>
+        <div class="item" data-target="logs">로그·운영 <span class="pill">감사</span></div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="muted" style="font-size:12px; padding:0 10px; line-height:1.45">
+        <div style="margin-bottom:8px;"><span class="tag">원칙</span> 후가공 자동 계산 + 관리자 개입 가능</div>
+        <div><span class="tag">목업</span> 화면 흐름·데이터 구조 검증용</div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <div class="topbar-inner">
+          <div class="title">
+            <h2 id="pageTitle">대시보드</h2>
+            <span id="pageSub">오늘의 진행 현황을 한눈에 확인합니다.</span>
+          </div>
+          <div class="actions">
+            <button class="btn" id="btnOpenLogs">수정 이력 보기</button>
+            <button class="btn primary" id="btnNewOrder">발주 등록</button>
+            <button class="btn good" id="btnExport">엑셀 다운로드</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- DASH -->
+      <section class="section active" id="dash">
+        <div class="grid">
+          <div class="card" style="grid-column: span 3;">
+            <div class="kpi">
+              <div class="label">접수(오늘)</div>
+              <div class="value">18</div>
+              <div class="meta">견적대기 6 · 견적확정 9 · 제작 3</div>
+            </div>
+          </div>
+          <div class="card" style="grid-column: span 3;">
+            <div class="kpi">
+              <div class="label">제작 진행</div>
+              <div class="value">7</div>
+              <div class="meta">출력 2 · 후가공 3 · 포장 2</div>
+            </div>
+          </div>
+          <div class="card" style="grid-column: span 3;">
+            <div class="kpi">
+              <div class="label">출고 예정</div>
+              <div class="value">5</div>
+              <div class="meta">택배 3 · 퀵 2</div>
+            </div>
+          </div>
+          <div class="card" style="grid-column: span 3;">
+            <div class="kpi">
+              <div class="label">미수금(거래처)</div>
+              <div class="value">₩ 3,240,000</div>
+              <div class="meta">이번달 미수 4건</div>
+            </div>
+          </div>
+
+          <div class="card" style="grid-column: span 8;">
+            <div class="hd">
+              <div>
+                <h3>진행 현황(요약)</h3>
+                <div class="sub">접수 → 출력 → 후가공 → 포장 → 출고</div>
+              </div>
+              <span class="tag">실시간</span>
+            </div>
+            <div class="bd">
+              <table>
+                <thead>
+                  <tr>
+                    <th>발주번호</th>
+                    <th>거래처</th>
+                    <th>품목</th>
+                    <th>납기</th>
+                    <th>상태</th>
+                    <th>담당</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="mono">01012-56-002</td>
+                    <td>방지연</td>
+                    <td>PET 배너 600×1800 / 1장</td>
+                    <td>2026-01-13</td>
+                    <td><span class="tag warn">견적대기</span></td>
+                    <td>접수팀</td>
+                  </tr>
+                  <tr>
+                    <td class="mono">01012-230-004</td>
+                    <td>주재학</td>
+                    <td>포맥스 710×570 / 6종 각 1장</td>
+                    <td>2026-01-14</td>
+                    <td><span class="tag good">후가공</span></td>
+                    <td>후가공</td>
+                  </tr>
+                  <tr>
+                    <td class="mono">01011-230-003</td>
+                    <td>주재학</td>
+                    <td>켈지 5000×1200 / 1장</td>
+                    <td>2026-01-13</td>
+                    <td><span class="tag">포장</span></td>
+                    <td>출고팀</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="hint">목업 데이터입니다. 실제 시스템에서는 상태별 필터/검색/일괄처리/엑셀다운로드를 제공합니다.</div>
+            </div>
+          </div>
+
+          <div class="card" style="grid-column: span 4;">
+            <div class="hd">
+              <div>
+                <h3>알림</h3>
+                <div class="sub">지연 및 예외 건</div>
+              </div>
+              <span class="tag warn">3</span>
+            </div>
+            <div class="bd">
+              <div style="display:flex; flex-direction:column; gap:10px;">
+                <div class="card" style="box-shadow:none; border-radius:14px;">
+                  <div class="bd" style="padding:12px;">
+                    <div style="display:flex; justify-content:space-between; gap:10px;">
+                      <div>
+                        <div style="font-size:12px;">납기 임박</div>
+                        <div class="muted" style="font-size:11px;">01012-56-002 / 견적대기</div>
+                      </div>
+                      <span class="tag warn">D-1</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="card" style="box-shadow:none; border-radius:14px;">
+                  <div class="bd" style="padding:12px;">
+                    <div style="display:flex; justify-content:space-between; gap:10px;">
+                      <div>
+                        <div style="font-size:12px;">후가공 수정 필요</div>
+                        <div class="muted" style="font-size:11px;">모양재단 비용 보정 요청</div>
+                      </div>
+                      <span class="tag bad">예외</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="card" style="box-shadow:none; border-radius:14px;">
+                  <div class="bd" style="padding:12px;">
+                    <div style="display:flex; justify-content:space-between; gap:10px;">
+                      <div>
+                        <div style="font-size:12px;">미수금</div>
+                        <div class="muted" style="font-size:11px;">캐럿 기업서비스 / 2건</div>
+                      </div>
+                      <span class="tag warn">확인</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="hint">운영 편의: 내부 메모/공지, 예외 처리 워크플로우, 알림 규칙 설정을 확장 고려합니다.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ORDERS -->
+      <section class="section" id="orders">
+        <div class="twoCol">
+          <div class="card">
+            <div class="hd">
+              <div>
+                <h3>발주 등록</h3>
+                <div class="sub">카톡 주문을 표준 발주서로 전환</div>
+              </div>
+              <span class="tag">입력</span>
+            </div>
+            <div class="bd">
+              <div class="row">
+                <div class="field">
+                  <label>거래처</label>
+                  <select>
+                    <option>방지연</option>
+                    <option>주재학</option>
+                    <option>캐럿 기업서비스</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>납기일</label>
+                  <input type="date" value="2026-01-13" />
+                </div>
+                <div class="field">
+                  <label>배송 방식</label>
+                  <select>
+                    <option>택배</option>
+                    <option>퀵</option>
+                    <option>화물</option>
+                    <option>직접납품</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="divider"></div>
+
+              <div class="row">
+                <div class="field">
+                  <label>가로 (mm)</label>
+                  <input type="number" value="600" />
+                </div>
+                <div class="field">
+                  <label>세로 (mm)</label>
+                  <input type="number" value="1800" />
+                </div>
+                <div class="field">
+                  <label>수량</label>
+                  <input type="number" value="1" />
+                </div>
+              </div>
+
+              <div class="row" style="margin-top:10px;">
+                <div class="field">
+                  <label>원단</label>
+                  <select>
+                    <option>PET 210μ</option>
+                    <option>현수막천 150</option>
+                    <option>켈지</option>
+                    <option>포맥스 3T</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>출력 방식</label>
+                  <select>
+                    <option>실사</option>
+                    <option>UV</option>
+                    <option>디지털</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>후가공(기본 자동)</label>
+                  <select>
+                    <option>자동 추천</option>
+                    <option>코팅(단면 무광)</option>
+                    <option>재단(사각)</option>
+                    <option>재단(열)</option>
+                    <option>모양재단</option>
+                    <option>타공</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row" style="margin-top:10px;">
+                <div class="field" style="flex: 2 1 320px;">
+                  <label>요청사항 / 특이사항</label>
+                  <textarea placeholder="예: 사방 타공 필요, 코너 보강, 모양 재단 파일 별도 전달 등"></textarea>
+                </div>
+                <div class="field" style="flex: 1 1 220px;">
+                  <label>파일 업로드</label>
+                  <input type="file" />
+                  <div class="hint">대용량 업로드 및 상태표시는 쇼핑몰/포털과 연계됩니다.</div>
+                </div>
+              </div>
+
+              <div class="divider"></div>
+
+              <div class="row">
+                <button class="btn primary" type="button" onclick="alert('목업: 발주가 등록되었습니다.')">발주 등록</button>
+                <button class="btn" type="button" onclick="alert('목업: 발주서/지시서가 생성되었습니다.')">발주서/지시서 생성</button>
+                <button class="btn warn" type="button" onclick="openModal('modalAdjust')">후가공/금액 보정</button>
+              </div>
+              <div class="hint">핵심: 후가공은 자동 계산이 기본이며, 예외는 관리자 보정(사유+로그)으로 처리합니다.</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="hd">
+              <div>
+                <h3>발주 목록</h3>
+                <div class="sub">검색/필터/엑셀다운로드/일괄처리</div>
+              </div>
+              <span class="tag">리스트</span>
+            </div>
+            <div class="bd">
+              <div class="row">
+                <div class="field">
+                  <label>기간</label>
+                  <input type="text" value="2026-01-01 ~ 2026-01-31" />
+                </div>
+                <div class="field">
+                  <label>상태</label>
+                  <select>
+                    <option>전체</option>
+                    <option>접수</option>
+                    <option>견적대기</option>
+                    <option>견적확정</option>
+                    <option>제작진행</option>
+                    <option>출고완료</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>키워드</label>
+                  <input type="text" placeholder="발주번호/거래처/원단/옵션" />
+                </div>
+              </div>
+
+              <div class="divider"></div>
+
+              <table>
+                <thead>
+                  <tr>
+                    <th><input type="checkbox" /></th>
+                    <th>발주번호</th>
+                    <th>거래처</th>
+                    <th>규격</th>
+                    <th>원단</th>
+                    <th>후가공</th>
+                    <th>상태</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><input type="checkbox" /></td>
+                    <td class="mono">01012-56-002</td>
+                    <td>방지연</td>
+                    <td>600×1800 / 1장</td>
+                    <td>PET 210μ</td>
+                    <td><span class="tag">자동 추천</span></td>
+                    <td><span class="tag warn">견적대기</span></td>
+                  </tr>
+                  <tr>
+                    <td><input type="checkbox" /></td>
+                    <td class="mono">01012-230-004</td>
+                    <td>주재학</td>
+                    <td>710×570 / 6종</td>
+                    <td>포맥스 3T</td>
+                    <td><span class="tag bad">모양재단</span></td>
+                    <td><span class="tag good">후가공</span></td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="row" style="margin-top:12px;">
+                <button class="btn" type="button" onclick="alert('목업: 선택 삭제')">선택삭제</button>
+                <button class="btn good" type="button" onclick="alert('목업: 엑셀 다운로드')">엑셀 다운로드</button>
+                <button class="btn" type="button" onclick="alert('목업: 상태 변경')">상태 변경</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- QUOTE -->
+      <section class="section" id="quote">
+        <div class="twoCol">
+          <div class="card">
+            <div class="hd">
+              <div>
+                <h3>자동 견적</h3>
+                <div class="sub">면적(㎡) × 단가 × 수량 + 가중치</div>
+              </div>
+              <span class="tag">엔진</span>
+            </div>
+            <div class="bd">
+              <div class="row">
+                <div class="field">
+                  <label>가로(mm)</label>
+                  <input type="number" id="w" value="600"/>
+                </div>
+                <div class="field">
+                  <label>세로(mm)</label>
+                  <input type="number" id="h" value="1800"/>
+                </div>
+                <div class="field">
+                  <label>수량</label>
+                  <input type="number" id="q" value="1"/>
+                </div>
+              </div>
+
+              <div class="row" style="margin-top:10px;">
+                <div class="field">
+                  <label>원단</label>
+                  <select id="mat">
+                    <option value="7500">PET 210μ (₩7,500/㎡)</option>
+                    <option value="5500">현수막천150 (₩5,500/㎡)</option>
+                    <option value="6800">켈지 (₩6,800/㎡)</option>
+                    <option value="12000">포맥스3T (₩12,000/㎡)</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>출력 방식 가중치</label>
+                  <select id="printMul">
+                    <option value="1.0">실사 (×1.00)</option>
+                    <option value="1.2">UV (×1.20)</option>
+                    <option value="0.9">디지털 (×0.90)</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>납기 가중치</label>
+                  <select id="leadMul">
+                    <option value="1.0">여유 (×1.00)</option>
+                    <option value="1.08">일반 (×1.08)</option>
+                    <option value="1.18">급송 (×1.18)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="divider"></div>
+
+              <div class="row">
+                <div class="field">
+                  <label>후가공(자동 기본)</label>
+                  <select id="finishMul">
+                    <option value="1.00">자동 추천 (×1.00)</option>
+                    <option value="1.07">코팅 단면무광 (×1.07)</option>
+                    <option value="1.03">재단 사각 (×1.03)</option>
+                    <option value="1.05">재단 열 (×1.05)</option>
+                    <option value="1.15">모양 재단 (×1.15)</option>
+                    <option value="1.06">타공 (×1.06)</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>관리자 보정(₩)</label>
+                  <input type="number" id="adj" value="0"/>
+                </div>
+                <div class="field">
+                  <label>수정 사유</label>
+                  <input type="text" id="reason" placeholder="예: 모양재단 난이도 반영" />
+                </div>
+              </div>
+
+              <div class="divider"></div>
+
+              <div class="row" style="align-items:flex-end;">
+                <div class="field" style="flex: 2 1 320px;">
+                  <label>계산 결과</label>
+                  <input type="text" id="result" class="mono" readonly />
+                  <div class="hint">목업 계산식: (면적㎡ × 단가 × 수량) × 출력 × 납기 × 후가공 + 보정금액</div>
+                </div>
+                <div class="field" style="flex: 1 1 220px;">
+                  <button class="btn primary" type="button" onclick="calc()">견적 계산</button>
+                  <button class="btn" type="button" onclick="alert('목업: PDF 견적서 생성')">견적서 PDF</button>
+                  <button class="btn warn" type="button" onclick="logAdjustment()">수정 이력 저장</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="hd">
+              <div>
+                <h3>견적서 목록</h3>
+                <div class="sub">발주–견적 연계 저장</div>
+              </div>
+              <span class="tag">PDF</span>
+            </div>
+            <div class="bd">
+              <table>
+                <thead>
+                  <tr>
+                    <th>발주번호</th>
+                    <th>금액</th>
+                    <th>후가공</th>
+                    <th>수정</th>
+                    <th>문서</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="mono">01012-56-002</td>
+                    <td>₩ 28,000</td>
+                    <td><span class="tag">자동 추천</span></td>
+                    <td><span class="tag warn">대기</span></td>
+                    <td><button class="btn" type="button">PDF</button></td>
+                  </tr>
+                  <tr>
+                    <td class="mono">01012-230-004</td>
+                    <td>₩ 96,000</td>
+                    <td><span class="tag bad">모양재단</span></td>
+                    <td><span class="tag good">완료</span></td>
+                    <td><button class="btn" type="button">PDF</button></td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="hint">관리자 개입이 있는 경우: 보정금액/사유/작성자/시각을 로그로 남깁니다.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MES -->
+      <section class="section" id="mes">
+        <div class="grid">
+          <div class="card" style="grid-column: span 12;">
+            <div class="hd">
+              <div>
+                <h3>제작 공정 보드</h3>
+                <div class="sub">접수 → 출력 → 후가공 → 포장 → 완료</div>
+              </div>
+              <span class="tag">MES</span>
+            </div>
+            <div class="bd">
+              <div class="grid" style="gap:10px;">
+                <div class="card" style="grid-column: span 3; box-shadow:none;">
+                  <div class="hd"><h3>출력 대기</h3><span class="tag warn">2</span></div>
+                  <div class="bd">
+                    <div class="card" style="box-shadow:none; border-radius:14px;">
+                      <div class="bd">
+                        <div class="mono">01012-56-002</div>
+                        <div class="muted" style="font-size:11px;">PET 210μ / 실사</div>
+                        <div style="margin-top:8px;"><span class="tag">자동후가공</span></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card" style="grid-column: span 3; box-shadow:none;">
+                  <div class="hd"><h3>출력 중</h3><span class="tag">1</span></div>
+                  <div class="bd">
+                    <div class="card" style="box-shadow:none; border-radius:14px;">
+                      <div class="bd">
+                        <div class="mono">01011-230-003</div>
+                        <div class="muted" style="font-size:11px;">켈지 / 실사</div>
+                        <div class="hint">장비: (선택) · 메모: (선택)</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card" style="grid-column: span 3; box-shadow:none;">
+                  <div class="hd"><h3>후가공</h3><span class="tag good">3</span></div>
+                  <div class="bd">
+                    <div class="card" style="box-shadow:none; border-radius:14px;">
+                      <div class="bd">
+                        <div class="mono">01012-230-004</div>
+                        <div class="muted" style="font-size:11px;">포맥스3T / 모양재단</div>
+                        <button class="btn warn" type="button" onclick="openModal('modalAdjust')">후가공 수정</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card" style="grid-column: span 3; box-shadow:none;">
+                  <div class="hd"><h3>포장</h3><span class="tag">1</span></div>
+                  <div class="bd">
+                    <div class="card" style="box-shadow:none; border-radius:14px;">
+                      <div class="bd">
+                        <div class="mono">01011-230-003</div>
+                        <div class="muted" style="font-size:11px;">택배 · 박스 1</div>
+                        <button class="btn" type="button" onclick="alert('목업: 포장 완료')">포장 완료</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="hint">실제 구현 시: 칸반 보드 드래그/드롭, 지연 강조, 담당자 배정, 상태 변경 로그를 포함합니다.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SHIP -->
+      <section class="section" id="ship">
+        <div class="twoCol">
+          <div class="card">
+            <div class="hd">
+              <div>
+                <h3>출고 처리</h3>
+                <div class="sub">포장 단위 · 운송장 · 납품 확인</div>
+              </div>
+              <span class="tag">출고</span>
+            </div>
+            <div class="bd">
+              <div class="row">
+                <div class="field">
+                  <label>발주번호</label>
+                  <input class="mono" value="01011-230-003" />
+                </div>
+                <div class="field">
+                  <label>포장 단위</label>
+                  <select>
+                    <option>박스</option>
+                    <option>묶음</option>
+                    <option>낱장</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>포장 수량</label>
+                  <input type="number" value="1" />
+                </div>
+              </div>
+
+              <div class="row" style="margin-top:10px;">
+                <div class="field">
+                  <label>배송 방식</label>
+                  <select>
+                    <option>택배</option>
+                    <option>퀵</option>
+                    <option>화물</option>
+                    <option>직접납품</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>운송장 번호</label>
+                  <input class="mono" placeholder="예: 1234-5678-9012" />
+                </div>
+                <div class="field">
+                  <label>출고 메모</label>
+                  <input placeholder="예: 취급주의, 파손주의" />
+                </div>
+              </div>
+
+              <div class="divider"></div>
+
+              <div class="row">
+                <button class="btn good" type="button" onclick="alert('목업: 출고 완료')">출고 완료</button>
+                <button class="btn" type="button" onclick="alert('목업: 운송장 저장')">운송장 저장</button>
+                <button class="btn warn" type="button" onclick="openModal('modalScan')">바코드 스캔(납품)</button>
+              </div>
+              <div class="hint">납품 확인은 바코드 스캔 후 수령완료 처리 및 시각 기록이 남습니다.</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="hd">
+              <div>
+                <h3>배송 현황</h3>
+                <div class="sub">배송 방식별 추적</div>
+              </div>
+              <span class="tag">추적</span>
+            </div>
+            <div class="bd">
+              <table>
+                <thead>
+                  <tr>
+                    <th>발주번호</th>
+                    <th>배송</th>
+                    <th>운송장</th>
+                    <th>상태</th>
+                    <th>수령</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="mono">01011-230-003</td>
+                    <td>택배</td>
+                    <td class="mono">1234-5678-9012</td>
+                    <td><span class="tag">배송중</span></td>
+                    <td><button class="btn" type="button" onclick="alert('목업: 수령완료')">수령완료</button></td>
+                  </tr>
+                  <tr>
+                    <td class="mono">01012-230-004</td>
+                    <td>퀵</td>
+                    <td class="mono">QK-8821</td>
+                    <td><span class="tag good">수령완료</span></td>
+                    <td class="muted">완료</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="hint">확장: 배송 API 연동 시 자동 상태 업데이트 가능</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SETTLE -->
+      <section class="section" id="settle">
+        <div class="twoCol">
+          <div class="card">
+            <div class="hd">
+              <div>
+                <h3>매출 · 미수금</h3>
+                <div class="sub">발주별 집계 및 거래처별 관리</div>
+              </div>
+              <span class="tag">정산</span>
+            </div>
+            <div class="bd">
+              <div class="row">
+                <div class="field">
+                  <label>거래처</label>
+                  <select>
+                    <option>전체</option>
+                    <option>캐럿 기업서비스</option>
+                    <option>방지연</option>
+                    <option>주재학</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>기간</label>
+                  <input type="text" value="2026-01-01 ~ 2026-01-31" />
+                </div>
+                <div class="field">
+                  <label>상태</label>
+                  <select>
+                    <option>전체</option>
+                    <option>입금완료</option>
+                    <option>미수금</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="divider"></div>
+
+              <table>
+                <thead>
+                  <tr>
+                    <th>발주번호</th>
+                    <th>거래처</th>
+                    <th>금액</th>
+                    <th>입금</th>
+                    <th>메모</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="mono">01012-56-002</td>
+                    <td>방지연</td>
+                    <td>₩ 28,000</td>
+                    <td><span class="tag warn">미수</span></td>
+                    <td><input placeholder="예: 1/15 입금 예정" /></td>
+                  </tr>
+                  <tr>
+                    <td class="mono">01012-230-004</td>
+                    <td>주재학</td>
+                    <td>₩ 96,000</td>
+                    <td><span class="tag good">완료</span></td>
+                    <td class="muted">-</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="row" style="margin-top:12px;">
+                <button class="btn" type="button" onclick="alert('목업: 입금 처리')">입금 처리</button>
+                <button class="btn good" type="button" onclick="alert('목업: Export')">매출 Export</button>
+                <button class="btn" type="button" onclick="alert('목업: 이카운터 연계(추후)')">ERP 연계(추후)</button>
+              </div>
+              <div class="hint">이카운터 ERP는 유지하며, 매출/세금계산서 관련 데이터 Export/연계 구조를 고려합니다.</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="hd">
+              <div>
+                <h3>통계</h3>
+                <div class="sub">월별/분기별 · 거래처 TOP</div>
+              </div>
+              <span class="tag">리포트</span>
+            </div>
+            <div class="bd">
+              <div class="card" style="box-shadow:none; border-radius:14px;">
+                <div class="bd">
+                  <div class="muted" style="font-size:12px;">월 매출(목업)</div>
+                  <div style="display:flex; align-items:flex-end; gap:8px; height:120px; margin-top:12px;">
+                    <div style="flex:1; height:60%; background:rgba(96,165,250,.25); border:1px solid rgba(96,165,250,.35); border-radius:10px"></div>
+                    <div style="flex:1; height:78%; background:rgba(96,165,250,.25); border:1px solid rgba(96,165,250,.35); border-radius:10px"></div>
+                    <div style="flex:1; height:45%; background:rgba(96,165,250,.25); border:1px solid rgba(96,165,250,.35); border-radius:10px"></div>
+                    <div style="flex:1; height:88%; background:rgba(96,165,250,.25); border:1px solid rgba(96,165,250,.35); border-radius:10px"></div>
+                  </div>
+                  <div class="hint">실제 구현 시: 차트(월/분기), TOP 거래처, 상품군별 비중 등을 제공합니다.</div>
+                </div>
+              </div>
+
+              <div class="divider"></div>
+
+              <table>
+                <thead>
+                  <tr>
+                    <th>거래처</th>
+                    <th>매출(월)</th>
+                    <th>건수</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>캐럿 기업서비스</td><td>₩ 1,420,000</td><td>18</td></tr>
+                  <tr><td>주재학</td><td>₩ 980,000</td><td>11</td></tr>
+                  <tr><td>방지연</td><td>₩ 340,000</td><td>6</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MASTER -->
+      <section class="section" id="master">
+        <div class="grid">
+          <div class="card" style="grid-column: span 6;">
+            <div class="hd">
+              <div>
+                <h3>원단 마스터</h3>
+                <div class="sub">기본 단가(㎡) · 실내/실외</div>
+              </div>
+              <span class="tag">마스터</span>
+            </div>
+            <div class="bd">
+              <div class="row">
+                <div class="field"><label>원단명</label><input placeholder="예: PET 210μ" /></div>
+                <div class="field"><label>구분</label>
+                  <select><option>실내</option><option>실외</option></select>
+                </div>
+                <div class="field"><label>단가(₩/㎡)</label><input type="number" placeholder="예: 7500" /></div>
+              </div>
+              <div class="row" style="margin-top:10px;">
+                <button class="btn primary" type="button" onclick="alert('목업: 등록')">등록</button>
+                <button class="btn" type="button" onclick="alert('목업: 수정')">수정</button>
+                <button class="btn" type="button" onclick="alert('목업: 삭제')">삭제</button>
+              </div>
+
+              <div class="divider"></div>
+
+              <table>
+                <thead><tr><th>원단</th><th>구분</th><th>단가(₩/㎡)</th><th>상태</th></tr></thead>
+                <tbody>
+                  <tr><td>PET 210μ</td><td>실외</td><td>7,500</td><td><span class="tag good">사용</span></td></tr>
+                  <tr><td>현수막천150</td><td>실외</td><td>5,500</td><td><span class="tag good">사용</span></td></tr>
+                  <tr><td>켈지</td><td>실내</td><td>6,800</td><td><span class="tag good">사용</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card" style="grid-column: span 6;">
+            <div class="hd">
+              <div>
+                <h3>후가공 마스터</h3>
+                <div class="sub">자동 추천 + 관리자 보정</div>
+              </div>
+              <span class="tag warn">중요</span>
+            </div>
+            <div class="bd">
+              <div class="row">
+                <div class="field"><label>후가공명</label><input placeholder="예: 모양 재단" /></div>
+                <div class="field"><label>기본 가중치(예)</label><input type="number" step="0.01" placeholder="예: 1.15" /></div>
+                <div class="field"><label>기본 단가(선택)</label><input type="number" placeholder="예: 15000" /></div>
+              </div>
+              <div class="row" style="margin-top:10px;">
+                <button class="btn primary" type="button" onclick="alert('목업: 등록')">등록</button>
+                <button class="btn" type="button" onclick="alert('목업: 수정')">수정</button>
+                <button class="btn" type="button" onclick="alert('목업: 삭제')">삭제</button>
+              </div>
+
+              <div class="divider"></div>
+
+              <table>
+                <thead><tr><th>후가공</th><th>가중치</th><th>자동추천</th><th>관리자보정</th></tr></thead>
+                <tbody>
+                  <tr><td>코팅 단면무광</td><td>×1.07</td><td><span class="tag good">가능</span></td><td><span class="tag good">가능</span></td></tr>
+                  <tr><td>재단 열</td><td>×1.05</td><td><span class="tag good">가능</span></td><td><span class="tag good">가능</span></td></tr>
+                  <tr><td>모양 재단</td><td>×1.15</td><td><span class="tag warn">조건부</span></td><td><span class="tag good">가능</span></td></tr>
+                </tbody>
+              </table>
+
+              <div class="hint">자동 추천 로직(룰)은 추후 '용도 프리셋'과 함께 확장 가능합니다.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PORTAL -->
+      <section class="section" id="portal">
+        <div class="grid">
+          <!-- Left: Category/Menu List -->
+          <div class="card" style="grid-column: span 4;">
+            <div class="hd">
+              <div>
+                <h3>제품 주문 메뉴</h3>
+                <div class="sub">카테고리 · 상품 리스트 (관리자 설정)</div>
+              </div>
+              <span class="tag">메뉴</span>
+            </div>
+            <div class="bd" style="padding:12px;">
+              <div class="row">
+                <div class="field" style="min-width:0;">
+                  <label>카테고리</label>
+                  <select id="catSelect"></select>
+                </div>
+              </div>
+              <div class="divider"></div>
+              <div class="muted" style="font-size:12px; margin-bottom:8px;">상품</div>
+              <div id="productList" style="display:flex; flex-direction:column; gap:8px;"></div>
+              <div class="divider"></div>
+              <div class="row" style="justify-content:space-between;">
+                <span class="tag">관리자</span>
+                <label style="display:flex; gap:8px; align-items:center; font-size:12px; color:var(--muted); cursor:pointer;">
+                  <input type="checkbox" id="adminModeToggle" />
+                  관리자 모드
+                </label>
+              </div>
+              <div class="hint">메뉴/상품/옵션/가격 규칙은 관리자에서 제어됩니다(목업: 로컬 저장).</div>
+            </div>
+          </div>
+
+          <!-- Middle: Live Preview -->
+          <div class="card" style="grid-column: span 4;">
+            <div class="hd">
+              <div>
+                <h3>실시간 미리보기</h3>
+                <div class="sub">입력값 변경 시 썸네일 즉시 반영</div>
+              </div>
+              <span class="tag">Preview</span>
+            </div>
+            <div class="bd">
+              <div style="border:1px dashed rgba(148,163,184,.55); border-radius:14px; padding:12px; background:rgba(59,130,246,.06)">
+                <svg id="previewSvg" viewBox="0 0 320 240" width="100%" height="240" role="img" aria-label="preview">
+                  <rect id="prevRect" x="40" y="20" width="240" height="200" fill="rgba(96,165,250,.10)" stroke="rgba(96,165,250,.55)" stroke-width="2" rx="10"></rect>
+                  <text id="prevW" x="160" y="16" text-anchor="middle" font-size="12" fill="rgba(154,166,189,.95)">W: 1000mm</text>
+                  <text id="prevH" x="10" y="125" text-anchor="middle" font-size="12" fill="rgba(154,166,189,.95)" transform="rotate(-90 10 125)">H: 1000mm</text>
+                  <text id="prevInfo" x="160" y="232" text-anchor="middle" font-size="11" fill="rgba(154,166,189,.95)">면적: 1.000㎡ · 수량: 1</text>
+                </svg>
+              </div>
+
+              <div class="divider"></div>
+
+              <div class="card" style="box-shadow:none; border-radius:14px;">
+                <div class="bd" style="padding:12px;">
+                  <div style="display:flex; justify-content:space-between; gap:10px; align-items:flex-end;">
+                    <div>
+                      <div class="muted" style="font-size:12px;">실시간 계산</div>
+                      <div id="calcLine" class="mono" style="font-size:12px; margin-top:6px;">-</div>
+                    </div>
+                    <span class="tag">Auto</span>
+                  </div>
+                  <div class="hint">상품가/부가세/총액이 자동 계산됩니다. 후가공 비용 포함.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Configurator -->
+          <div class="card" style="grid-column: span 4;">
+            <div class="hd">
+              <div>
+                <h3>옵션 입력</h3>
+                <div class="sub">입력값 → 미리보기/가격 자동 반영</div>
+              </div>
+              <span class="tag warn">주문</span>
+            </div>
+            <div class="bd">
+              <div class="row">
+                <div class="field" id="fieldTitle">
+                  <label>작업물 제목</label>
+                  <input id="jobTitle" placeholder="예: 현수막" />
+                </div>
+                <div class="field" id="fieldProduct">
+                  <label>제품</label>
+                  <select id="productSelect"></select>
+                </div>
+              </div>
+
+              <div class="row" style="margin-top:10px;">
+                <div class="field" id="fieldSizeW">
+                  <label>가로(mm)</label>
+                  <input type="number" id="w2" value="1000" min="10" />
+                </div>
+                <div class="field" id="fieldSizeH">
+                  <label>세로(mm)</label>
+                  <input type="number" id="h2" value="1000" min="10" />
+                </div>
+                <div class="field" id="fieldQty">
+                  <label>수량</label>
+                  <input type="number" id="q2" value="1" min="1" />
+                </div>
+              </div>
+
+              <div class="row" style="margin-top:10px;">
+                <div class="field" id="fieldMaterial">
+                  <label>원단</label>
+                  <select id="materialSelect"></select>
+                </div>
+                <div class="field" id="fieldPrint">
+                  <label>출력 방식</label>
+                  <select id="printSelect"></select>
+                </div>
+              </div>
+
+              <div class="divider"></div>
+
+              <div class="row">
+                <div class="field" id="fieldFinish">
+                  <label>후가공 선택</label>
+                  <select id="finishSelect"></select>
+                </div>
+                <div class="field" id="fieldHems">
+                  <label>미싱 옵션(선택)</label>
+                  <div style="display:flex; flex-wrap:wrap; gap:8px; padding:10px 11px; border-radius:12px; border:1px solid var(--border2); background:#fff;">
+                    <label style="display:flex; gap:6px; align-items:center; font-size:12px; color:var(--muted);"><input type="checkbox" class="hem" value="T">상</label>
+                    <label style="display:flex; gap:6px; align-items:center; font-size:12px; color:var(--muted);"><input type="checkbox" class="hem" value="B">하</label>
+                    <label style="display:flex; gap:6px; align-items:center; font-size:12px; color:var(--muted);"><input type="checkbox" class="hem" value="L">좌</label>
+                    <label style="display:flex; gap:6px; align-items:center; font-size:12px; color:var(--muted);"><input type="checkbox" class="hem" value="R">우</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row" style="margin-top:10px;">
+                <div class="field" id="fieldGrommet">
+                  <label>타공(선택)</label>
+                  <select id="grommetSelect"></select>
+                </div>
+                <div class="field" id="fieldGrommetSpacing">
+                  <label>타공 간격</label>
+                  <select id="grommetSpacingSelect"></select>
+                </div>
+              </div>
+
+              <div class="divider"></div>
+
+              <div class="card" style="box-shadow:none; border-radius:14px;">
+                <div class="bd" style="padding:12px;">
+                  <div style="display:flex; justify-content:space-between; gap:10px;">
+                    <div>
+                      <div class="muted" style="font-size:12px;">상품가(공급가)</div>
+                      <div id="priceSupply" style="font-size:18px; margin-top:4px;">₩ 0</div>
+                    </div>
+                    <div style="text-align:right;">
+                      <div class="muted" style="font-size:12px;">부가세(10%)</div>
+                      <div id="priceVat" style="font-size:14px; margin-top:6px;">₩ 0</div>
+                    </div>
+                  </div>
+                  <div class="divider" style="margin:12px 0;"></div>
+                  <div style="display:flex; justify-content:space-between; gap:10px; align-items:flex-end;">
+                    <div class="muted" style="font-size:12px;">총 주문금액</div>
+                    <div id="priceTotal" style="font-size:22px; letter-spacing:-.3px;">₩ 0</div>
+                  </div>
+                  <div class="hint">크기/원단/출력/후가공에 따라 가격이 자동 반영됩니다.</div>
+                </div>
+              </div>
+
+              <div class="row" style="margin-top:12px;">
+                <button class="btn primary" type="button" onclick="alert('목업: 바로구매')">바로구매</button>
+                <button class="btn" type="button" onclick="alert('목업: 장바구니')">장바구니</button>
+                <button class="btn" type="button" onclick="alert('목업: 견적(출력)')">견적(출력)</button>
+              </div>
+
+              <div id="adminPanel" style="display:none;">
+                <div class="divider"></div>
+                <div class="muted" style="font-size:12px; margin-bottom:8px;">관리자 설정(목업)</div>
+                <div class="card" style="box-shadow:none; border-radius:14px;">
+                  <div class="bd" style="padding:12px;">
+                    <div class="row">
+                      <div class="field">
+                        <label>필드 노출</label>
+                        <select id="presetFields">
+                          <option value="default">기본(전체 노출)</option>
+                          <option value="simple">간단(후가공/타공 숨김)</option>
+                        </select>
+                      </div>
+                      <div class="field">
+                        <label>VAT 비율</label>
+                        <input type="number" id="vatRate" step="0.01" value="0.10" />
+                      </div>
+                    </div>
+                    <div class="row" style="margin-top:10px;">
+                      <div class="field" style="flex:2 1 340px;">
+                        <label>가격 규칙(JSON, 샘플)</label>
+                        <textarea readonly class="mono" style="min-height:110px;">{
+  "materials": "㎡ 단가",
+  "prints": "가중치",
+  "finishes": "고정/둘레/타공 옵션",
+  "vatRate": "0.10"
+}</textarea>
+                      </div>
+                    </div>
+                    <div class="row" style="margin-top:10px;">
+                      <button class="btn warn" type="button" onclick="saveAdminSettings()">설정 저장</button>
+                      <button class="btn" type="button" onclick="resetAdminSettings()">초기화</button>
+                    </div>
+                    <div class="hint">실제 구현에서는 관리자 페이지에서 옵션/가격/규칙을 등록·수정합니다.</div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="card" style="grid-column: span 12;">
+            <div class="hd">
+              <div>
+                <h3>구현 요건 체크</h3>
+                <div class="sub">요청하신 이프린팅 수준 기능 반영</div>
+              </div>
+              <span class="tag good">반영</span>
+            </div>
+            <div class="bd">
+              <div style="display:flex; flex-wrap:wrap; gap:10px;">
+                <span class="tag good">우측 입력 → 좌측 썸네일 실시간 변경</span>
+                <span class="tag good">상품가/부가세/총액 자동 계산</span>
+                <span class="tag good">크기 기반 비용 + 후가공 비용 반영</span>
+                <span class="tag good">우측 입력값 관리자 제어(목업은 로컬)</span>
+                <span class="tag good">카테고리/메뉴리스트 구성</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+<!-- LOGS -->
+      <section class="section" id="logs">
+        <div class="grid">
+          <div class="card" style="grid-column: span 12;">
+            <div class="hd">
+              <div>
+                <h3>로그 · 운영</h3>
+                <div class="sub">후가공/견적 수정 이력, 상태 변경 이력</div>
+              </div>
+              <span class="tag">감사</span>
+            </div>
+            <div class="bd">
+              <div class="row">
+                <div class="field">
+                  <label>기간</label>
+                  <input type="text" value="최근 7일" />
+                </div>
+                <div class="field">
+                  <label>유형</label>
+                  <select>
+                    <option>전체</option>
+                    <option>후가공 수정</option>
+                    <option>견적 보정</option>
+                    <option>상태 변경</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>키워드</label>
+                  <input type="text" placeholder="발주번호/작성자/사유" />
+                </div>
+              </div>
+
+              <div class="divider"></div>
+
+              <table id="logTable">
+                <thead>
+                  <tr>
+                    <th>시각</th>
+                    <th>발주번호</th>
+                    <th>유형</th>
+                    <th>변경 내용</th>
+                    <th>사유</th>
+                    <th>작성자</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="mono">2026-01-12 16:40</td>
+                    <td class="mono">01012-230-004</td>
+                    <td><span class="tag warn">후가공 수정</span></td>
+                    <td>모양재단 비용 +₩15,000</td>
+                    <td>난이도 반영</td>
+                    <td>관리자</td>
+                  </tr>
+                  <tr>
+                    <td class="mono">2026-01-12 15:12</td>
+                    <td class="mono">01012-56-002</td>
+                    <td><span class="tag">상태 변경</span></td>
+                    <td>접수 → 견적대기</td>
+                    <td>-</td>
+                    <td>접수팀</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="row" style="margin-top:12px;">
+                <button class="btn" type="button" onclick="alert('목업: 로그 엑셀 다운로드')">로그 다운로드</button>
+                <button class="btn warn" type="button" onclick="alert('목업: 감사 내역 출력')">감사 출력</button>
+              </div>
+
+              <div class="hint">운영 편의: 변경 전/후 값, 사용자 IP, 첨부파일, 승인 플로우(선택)를 확장 가능합니다.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Modals -->
+  <div class="modal-backdrop" id="modalAdjust">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitleAdjust">
+      <div class="mhd">
+        <h4 id="mTitleAdjust">후가공/금액 보정 (관리자 개입)</h4>
+        <button class="btn" type="button" onclick="closeModal('modalAdjust')">닫기</button>
+      </div>
+      <div class="mbd">
+        <div class="row">
+          <div class="field">
+            <label>대상 발주번호</label>
+            <input class="mono" value="01012-230-004" />
+          </div>
+          <div class="field">
+            <label>후가공 항목</label>
+            <select>
+              <option>모양 재단</option>
+              <option>코팅 단면무광</option>
+              <option>재단 열</option>
+              <option>타공</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>보정 금액(₩)</label>
+            <input type="number" value="15000" />
+          </div>
+        </div>
+        <div class="row" style="margin-top:10px;">
+          <div class="field" style="flex: 2 1 320px;">
+            <label>수정 사유(필수)</label>
+            <input placeholder="예: 모양재단 난이도/칼선 복잡" />
+          </div>
+          <div class="field">
+            <label>작성자</label>
+            <input value="관리자" />
+          </div>
+        </div>
+        <div class="hint">정책: 후가공은 자동이 기본이며, 관리자 보정 시 사유 입력 + 로그 저장이 필수입니다.</div>
+      </div>
+      <div class="mft">
+        <button class="btn" type="button" onclick="closeModal('modalAdjust')">취소</button>
+        <button class="btn warn" type="button" onclick="saveAdjustment()">보정 저장</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="modalScan">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitleScan">
+      <div class="mhd">
+        <h4 id="mTitleScan">바코드 스캔 (납품 확인)</h4>
+        <button class="btn" type="button" onclick="closeModal('modalScan')">닫기</button>
+      </div>
+      <div class="mbd">
+        <div class="row">
+          <div class="field">
+            <label>스캔 입력(목업)</label>
+            <input class="mono" id="scanInput" placeholder="예: 01011-230-003" />
+            <div class="hint">실제 구현 시: 바코드 스캐너 입력을 그대로 받아 처리합니다.</div>
+          </div>
+        </div>
+      </div>
+      <div class="mft">
+        <button class="btn" type="button" onclick="closeModal('modalScan')">취소</button>
+        <button class="btn good" type="button" onclick="confirmScan()">수령완료 처리</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="modalLogs">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitleLogs">
+      <div class="mhd">
+        <h4 id="mTitleLogs">최근 수정 이력</h4>
+        <button class="btn" type="button" onclick="closeModal('modalLogs')">닫기</button>
+      </div>
+      <div class="mbd">
+        <div class="muted" style="font-size:12px; margin-bottom:10px;">
+          후가공/견적 보정은 사유 입력 + 로그 저장이 필수입니다.
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>시각</th>
+              <th>발주번호</th>
+              <th>유형</th>
+              <th>내용</th>
+              <th>사유</th>
+            </tr>
+          </thead>
+          <tbody id="quickLogBody">
+            <tr>
+              <td class="mono">2026-01-12 16:40</td>
+              <td class="mono">01012-230-004</td>
+              <td><span class="tag warn">후가공 수정</span></td>
+              <td>모양재단 비용 +₩15,000</td>
+              <td>난이도 반영</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="mft">
+        <button class="btn" type="button" onclick="closeModal('modalLogs')">닫기</button>
+        <button class="btn" type="button" onclick="switchTo('logs')">전체 로그로 이동</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const nav = document.getElementById('nav');
+    const sections = Array.from(document.querySelectorAll('.section'));
+    const titleEl = document.getElementById('pageTitle');
+    const subEl = document.getElementById('pageSub');
+
+    const meta = {
+      dash: ["대시보드", "오늘의 진행 현황을 한눈에 확인합니다."],
+      orders: ["발주 관리", "발주 등록, 발주서/지시서, 상태 관리"],
+      quote: ["견적 엔진", "면적 기반 자동 산출 + 관리자 보정 + 로그"],
+      mes: ["제작 MES", "접수 → 출력 → 후가공 → 포장 진행 관리"],
+      ship: ["출고·납품", "운송장/배송/바코드 수령확인"],
+      settle: ["정산·매출", "매출/미수금/통계, ERP 연계 고려"],
+      master: ["마스터", "원단/후가공/납기/출력방식 기준 관리"],
+      portal: ["홈페이지·쇼핑몰", "실시간 미리보기·자동 견적·관리자 제어"],
+      logs: ["로그·운영", "후가공/견적/상태 변경 이력 관리"]
+    };
+
+    function switchTo(id){
+      sections.forEach(s => s.classList.toggle('active', s.id === id));
+      Array.from(nav.querySelectorAll('.item')).forEach(i => i.classList.toggle('active', i.dataset.target === id));
+      titleEl.textContent = meta[id][0];
+      subEl.textContent = meta[id][1];
+      window.scrollTo({top:0, behavior:'instant'});
+    }
+
+    nav.addEventListener('click', (e)=>{
+      const item = e.target.closest('.item');
+      if(!item) return;
+      switchTo(item.dataset.target);
+    });
+
+    document.getElementById('btnNewOrder').addEventListener('click', ()=> switchTo('orders'));
+    document.getElementById('btnExport').addEventListener('click', ()=> alert('목업: 엑셀 다운로드'));
+    document.getElementById('btnOpenLogs').addEventListener('click', ()=> openModal('modalLogs'));
+
+    function openModal(id){ document.getElementById(id).classList.add('open'); }
+    function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+    window.openModal = openModal;
+    window.closeModal = closeModal;
+    window.switchTo = switchTo;
+
+    function calc(){
+      const w = Number(document.getElementById('w').value || 0);
+      const h = Number(document.getElementById('h').value || 0);
+      const q = Number(document.getElementById('q').value || 0);
+      const unit = Number(document.getElementById('mat').value || 0);
+      const pm = Number(document.getElementById('printMul').value || 1);
+      const lm = Number(document.getElementById('leadMul').value || 1);
+      const fm = Number(document.getElementById('finishMul').value || 1);
+      const adj = Number(document.getElementById('adj').value || 0);
+
+      const area = (w/1000) * (h/1000);
+      const base = area * unit * q;
+      const total = Math.round((base * pm * lm * fm) + adj);
+
+      const fmt = new Intl.NumberFormat('ko-KR');
+      document.getElementById('result').value =
+        `면적 ${area.toFixed(3)}㎡ · 단가 ₩${fmt.format(unit)}/㎡ · 수량 ${q}  →  총 ₩${fmt.format(total)}`;
+    }
+    window.calc = calc;
+    calc();
+
+    function nowStamp(){
+      const d = new Date();
+      const pad = (n)=> String(n).padStart(2,'0');
+      return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    }
+
+    function escapeHtml(str){
+      return str.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#039;");
+    }
+
+    function saveAdjustment(){
+      const ts = nowStamp();
+      const orderNo = "01012-230-004";
+
+      const qBody = document.getElementById('quickLogBody');
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="mono">${ts}</td>
+        <td class="mono">${orderNo}</td>
+        <td><span class="tag warn">후가공 수정</span></td>
+        <td>보정 저장</td>
+        <td>사유 입력</td>
+      `;
+      qBody.prepend(tr);
+
+      const logT = document.querySelector('#logTable tbody');
+      const tr2 = document.createElement('tr');
+      tr2.innerHTML = `
+        <td class="mono">${ts}</td>
+        <td class="mono">${orderNo}</td>
+        <td><span class="tag warn">후가공 수정</span></td>
+        <td>후가공 항목/금액 보정</td>
+        <td>사유 입력</td>
+        <td>관리자</td>
+      `;
+      logT.prepend(tr2);
+
+      closeModal('modalAdjust');
+      alert('목업: 후가공 보정이 저장되었습니다.');
+    }
+    window.saveAdjustment = saveAdjustment;
+
+    function logAdjustment(){
+      const reason = (document.getElementById('reason').value || '').trim();
+      if(!reason){
+        alert('수정 사유를 입력해주세요. (목업 정책)');
+        return;
+      }
+      const ts = nowStamp();
+      const logT = document.querySelector('#logTable tbody');
+
+      const tr2 = document.createElement('tr');
+      tr2.innerHTML = `
+        <td class="mono">${ts}</td>
+        <td class="mono">견적(임시)</td>
+        <td><span class="tag warn">견적 보정</span></td>
+        <td>관리자 보정 적용</td>
+        <td>${escapeHtml(reason)}</td>
+        <td>관리자</td>
+      `;
+      logT.prepend(tr2);
+
+      const qBody = document.getElementById('quickLogBody');
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="mono">${ts}</td>
+        <td class="mono">견적(임시)</td>
+        <td><span class="tag warn">견적 보정</span></td>
+        <td>보정 적용</td>
+        <td>${escapeHtml(reason)}</td>
+      `;
+      qBody.prepend(tr);
+
+      alert('목업: 수정 이력이 저장되었습니다.');
+    }
+    window.logAdjustment = logAdjustment;
+
+    function confirmScan(){
+      const v = (document.getElementById('scanInput').value || '').trim();
+      if(!v){
+        alert('스캔 값을 입력해주세요.');
+        return;
+      }
+      closeModal('modalScan');
+      alert(`목업: [${v}] 수령완료 처리`);
+    }
+    window.confirmScan = confirmScan;
+
+    document.querySelectorAll('.modal-backdrop').forEach(b=>{
+      b.addEventListener('click', (e)=>{
+        if(e.target === b) b.classList.remove('open');
+      });
+    });
+
+    window.addEventListener('keydown', (e)=>{
+      if(e.key === 'Escape'){
+        document.querySelectorAll('.modal-backdrop.open').forEach(m => m.classList.remove('open'));
+      }
+    });
+  
+    // ===== Portal Configurator (eprinting-style mock) =====
+    const SY_STORAGE_KEY = "shinyoung_admin_settings_v1";
+    const defaultAdmin = { presetFields: "default", vatRate: 0.10 };
+
+    const catalog = [
+      { id: "fabric", name: "천소재", products: [
+          { id: "banner", name: "현수막", base: { material: "FAB_BANNER", print: "PRINT_SOLVENT" } },
+          { id: "pet_banner", name: "패트배너(PET)", base: { material: "FAB_PET", print: "PRINT_SOLVENT" } }
+        ]
+      },
+      { id: "board", name: "보드류", products: [
+          { id: "foam", name: "포맥스", base: { material: "BOARD_FOAM", print: "PRINT_UV" } }
+        ]
+      }
+    ];
+
+    const materials = {
+      FAB_BANNER: { name: "현수막천 150", unitPrice: 5500 },
+      FAB_PET: { name: "PET 210μ", unitPrice: 7500 },
+      BOARD_FOAM: { name: "포맥스 3T", unitPrice: 12000 }
+    };
+
+    const prints = {
+      PRINT_SOLVENT: { name: "실사(솔벤)", mul: 1.00 },
+      PRINT_UV: { name: "UV", mul: 1.20 },
+      PRINT_DIGITAL: { name: "디지털", mul: 0.90 }
+    };
+
+    // finishes: flat costs (per order) + hem per perimeter(mm)
+    const finishes = {
+      FINISH_AUTO: { name: "자동 추천", type: "mul", value: 1.00 },
+      FINISH_CUT_SQUARE: { name: "사각 재단", type: "flat", value: 700 },
+      FINISH_CUT_HEAT: { name: "열재단", type: "flat", value: 900 },
+      FINISH_HEM: { name: "미싱", type: "perimeter_mm", value: 0.25 } // ₩ per mm perimeter
+    };
+
+    const grommets = {
+      NONE: { name: "없음", type: "flat", value: 0 },
+      BASIC: { name: "타공", type: "per_hole", value: 120 }
+    };
+
+    const grommetSpacing = {
+      S30: { name: "30mm", mm: 30 },
+      S50: { name: "50mm", mm: 50 },
+      S100: { name: "100mm", mm: 100 }
+    };
+
+    function fmtKRW(n){
+      const fmt = new Intl.NumberFormat('ko-KR');
+      return `₩ ${fmt.format(Math.max(0, Math.round(n)))}`;
+    }
+
+    function loadAdmin(){
+      try{
+        const raw = localStorage.getItem(SY_STORAGE_KEY);
+        if(!raw) return { ...defaultAdmin };
+        const obj = JSON.parse(raw);
+        return { ...defaultAdmin, ...obj };
+      }catch(e){
+        return { ...defaultAdmin };
+      }
+    }
+
+    function applyFieldPreset(preset){
+      const hideFinish = preset === "simple";
+      ["fieldFinish","fieldHems","fieldGrommet","fieldGrommetSpacing"].forEach(id=>{
+        const el = document.getElementById(id);
+        if(!el) return;
+        el.style.display = hideFinish ? "none" : "";
+      });
+    }
+
+    function saveAdminSettings(){
+      const presetFields = document.getElementById("presetFields").value;
+      const vatRate = Number(document.getElementById("vatRate").value || 0.10);
+      localStorage.setItem(SY_STORAGE_KEY, JSON.stringify({ presetFields, vatRate }));
+      window.__syVatRate = vatRate;
+      applyFieldPreset(presetFields);
+      alert("목업: 관리자 설정 저장");
+      recalcPortal();
+    }
+
+    function resetAdminSettings(){
+      localStorage.removeItem(SY_STORAGE_KEY);
+      const s = loadAdmin();
+      document.getElementById("presetFields").value = s.presetFields;
+      document.getElementById("vatRate").value = s.vatRate;
+      window.__syVatRate = s.vatRate;
+      applyFieldPreset(s.presetFields);
+      alert("목업: 초기화");
+      recalcPortal();
+    }
+
+    window.saveAdminSettings = saveAdminSettings;
+    window.resetAdminSettings = resetAdminSettings;
+
+    function initPortal(){
+      const catSel = document.getElementById("catSelect");
+      const prodSel = document.getElementById("productSelect");
+      const prodList = document.getElementById("productList");
+      if(!catSel || !prodSel || !prodList) return;
+
+      const adminToggle = document.getElementById("adminModeToggle");
+      const adminPanel = document.getElementById("adminPanel");
+      adminToggle.addEventListener("change", ()=> {
+        adminPanel.style.display = adminToggle.checked ? "block" : "none";
+      });
+
+      const s = loadAdmin();
+      document.getElementById("presetFields").value = s.presetFields;
+      document.getElementById("vatRate").value = s.vatRate;
+      window.__syVatRate = s.vatRate;
+      applyFieldPreset(s.presetFields);
+
+      // materials
+      const matSel = document.getElementById("materialSelect");
+      matSel.innerHTML = Object.entries(materials)
+        .map(([k,v])=>`<option value="${k}">${v.name} (${fmtKRW(v.unitPrice)}/㎡)</option>`).join("");
+
+      // prints
+      const printSel = document.getElementById("printSelect");
+      printSel.innerHTML = Object.entries(prints)
+        .map(([k,v])=>`<option value="${k}">${v.name} (×${v.mul.toFixed(2)})</option>`).join("");
+
+      // finishes
+      const finSel = document.getElementById("finishSelect");
+      finSel.innerHTML = `
+        <option value="FINISH_AUTO">자동 추천</option>
+        <option value="FINISH_CUT_SQUARE">사각 재단</option>
+        <option value="FINISH_CUT_HEAT">열재단</option>
+      `;
+
+      // grommet
+      const groSel = document.getElementById("grommetSelect");
+      groSel.innerHTML = Object.entries(grommets).map(([k,v])=>`<option value="${k}">${v.name}</option>`).join("");
+      const groSpaceSel = document.getElementById("grommetSpacingSelect");
+      groSpaceSel.innerHTML = Object.entries(grommetSpacing).map(([k,v])=>`<option value="${k}">${v.name}</option>`).join("");
+
+      // categories
+      catSel.innerHTML = catalog.map(c=>`<option value="${c.id}">${c.name}</option>`).join("");
+      catSel.addEventListener("change", ()=> renderProducts(catSel.value));
+
+      function renderProducts(catId){
+        const cat = catalog.find(c=>c.id===catId) || catalog[0];
+
+        prodList.innerHTML = cat.products.map(p=>`
+          <div class="card" style="box-shadow:none; border-radius:14px; cursor:pointer;" data-prod="${p.id}">
+            <div class="bd" style="padding:12px;">
+              <div style="display:flex; justify-content:space-between; gap:10px; align-items:center;">
+                <div>
+                  <div style="font-size:12px;">${p.name}</div>
+                  <div class="muted" style="font-size:11px;">규격 입력형 · 자동견적</div>
+                </div>
+                <span class="tag">선택</span>
+              </div>
+            </div>
+          </div>
+        `).join("");
+
+        prodSel.innerHTML = cat.products.map(p=>`<option value="${p.id}">${p.name}</option>`).join("");
+        prodSel.value = cat.products[0]?.id || "";
+
+        prodList.querySelectorAll("[data-prod]").forEach(el=>{
+          el.addEventListener("click", ()=>{
+            prodSel.value = el.getAttribute("data-prod");
+            onProductChanged();
+          });
+        });
+
+        onProductChanged();
+      }
+
+      function onProductChanged(){
+        const cat = catalog.find(c=>c.id===catSel.value) || catalog[0];
+        const p = cat.products.find(x=>x.id===prodSel.value) || cat.products[0];
+
+        document.getElementById("materialSelect").value = p.base.material;
+        document.getElementById("printSelect").value = p.base.print;
+
+        const title = document.getElementById("jobTitle");
+        if(!title.value) title.value = p.name;
+
+        recalcPortal();
+      }
+
+      ["w2","h2","q2","materialSelect","printSelect","finishSelect","grommetSelect","grommetSpacingSelect","productSelect","catSelect"]
+        .forEach(id=>{
+          const el = document.getElementById(id);
+          if(!el) return;
+          el.addEventListener("input", recalcPortal);
+          el.addEventListener("change", recalcPortal);
+        });
+      document.querySelectorAll(".hem").forEach(cb=> cb.addEventListener("change", recalcPortal));
+
+      renderProducts(catalog[0].id);
+    }
+
+    function recalcPortal(){
+      const w = Math.max(10, Number(document.getElementById("w2")?.value || 1000));
+      const h = Math.max(10, Number(document.getElementById("h2")?.value || 1000));
+      const q = Math.max(1, Number(document.getElementById("q2")?.value || 1));
+      const matKey = document.getElementById("materialSelect")?.value || "FAB_BANNER";
+      const printKey = document.getElementById("printSelect")?.value || "PRINT_SOLVENT";
+      const finKey = document.getElementById("finishSelect")?.value || "FINISH_AUTO";
+      const groKey = document.getElementById("grommetSelect")?.value || "NONE";
+      const groSpaceKey = document.getElementById("grommetSpacingSelect")?.value || "S50";
+
+      const area = (w/1000) * (h/1000); // ㎡
+      const unit = materials[matKey]?.unitPrice || 0;
+      const pm = prints[printKey]?.mul || 1.0;
+
+      let supply = area * unit * q * pm;
+
+      const fin = finishes[finKey] || finishes.FINISH_AUTO;
+      if(fin.type === "flat") supply += fin.value * q;
+      if(fin.type === "mul") supply = supply * fin.value;
+
+      const hems = Array.from(document.querySelectorAll(".hem")).filter(x=>x.checked).map(x=>x.value);
+      if(hems.length){
+        const perimeter = (w + h) * 2; // mm
+        supply += finishes.FINISH_HEM.value * perimeter * q;
+      }
+
+      const gro = grommets[groKey] || grommets.NONE;
+      if(gro.type === "per_hole" && gro.value > 0){
+        const spacing = grommetSpacing[groSpaceKey]?.mm || 50;
+        const edges = hems.length ? hems : ["T","B","L","R"];
+        const holesPerEdge = (edge)=>{
+          const length = (edge === "T" || edge === "B") ? w : h;
+          return Math.max(0, Math.floor(length / spacing) + 1);
+        };
+        const holes = edges.reduce((acc,e)=>acc+holesPerEdge(e), 0);
+        supply += holes * gro.value * q;
+      }
+
+      const vatRate = typeof window.__syVatRate === "number" ? window.__syVatRate : 0.10;
+      const vat = supply * vatRate;
+      const total = supply + vat;
+
+      const supplyEl = document.getElementById("priceSupply");
+      const vatEl = document.getElementById("priceVat");
+      const totalEl = document.getElementById("priceTotal");
+      const calcLine = document.getElementById("calcLine");
+      if(supplyEl) supplyEl.textContent = fmtKRW(supply);
+      if(vatEl) vatEl.textContent = fmtKRW(vat);
+      if(totalEl) totalEl.textContent = fmtKRW(total);
+      if(calcLine) calcLine.textContent = `면적 ${area.toFixed(3)}㎡ · 단가 ${fmtKRW(unit)}/㎡ · 수량 ${q} · 출력 ×${pm.toFixed(2)} · 후가공/옵션 포함`;
+
+      // Preview update
+      const tw = document.getElementById("prevW");
+      const th = document.getElementById("prevH");
+      const info = document.getElementById("prevInfo");
+      if(tw) tw.textContent = `W: ${w}mm`;
+      if(th) th.textContent = `H: ${h}mm`;
+      if(info) info.textContent = `면적: ${area.toFixed(3)}㎡ · 수량: ${q}`;
+
+      const rect = document.getElementById("prevRect");
+      if(rect){
+        const viewW = 320, viewH = 240;
+        const maxW = 250, maxH = 190;
+        const ratio = w / h;
+        let rw = maxW, rh = maxH;
+        if(ratio >= 1){
+          rw = maxW;
+          rh = Math.max(40, Math.min(maxH, maxW/ratio));
+        }else{
+          rh = maxH;
+          rw = Math.max(40, Math.min(maxW, maxH*ratio));
+        }
+        rect.setAttribute("width", String(rw));
+        rect.setAttribute("height", String(rh));
+        rect.setAttribute("x", String((viewW - rw)/2));
+        rect.setAttribute("y", String((viewH - rh)/2 - 4));
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", ()=>{
+      initPortal();
+      recalcPortal();
+    });
+    // ===== /Portal Configurator =====
+
+</script>
+</body>
+</html>
