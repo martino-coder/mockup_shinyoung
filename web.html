@@ -3,282 +3,571 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>신영 웹 프로젝트</title>
+    <title>신영 웹 프로젝트 | 프리미엄 실사 출력 플랫폼</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;600;700&display=swap');
         body { font-family: 'Pretendard', sans-serif; }
         
+        /* 네비게이션 활성 상태 스타일 */
+        .nav-item.active { color: #2563EB; border-bottom: 2px solid #2563EB; font-weight: 700; }
+        
+        /* 페이지 전환 애니메이션 */
+        .page-section { display: none; animation: fadeIn 0.4s ease-in-out; }
+        .page-section.active { display: block; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* 커스텀 라디오 UI */
         .option-card:checked + div {
-            border-color: #2563EB;
-            background-color: #EFF6FF;
-            color: #1E40AF;
-            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.1), 0 2px 4px -1px rgba(37, 99, 235, 0.06);
+            border-color: #2563EB; background-color: #EFF6FF; color: #1E40AF;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.1);
         }
         .option-card:checked + div .check-icon { display: block; }
-        .preview-box { transition: all 0.3s ease; }
         #preview-object { background-size: cover; background-position: center; }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-800">
+<body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen">
 
-<div class="max-w-7xl mx-auto min-h-screen p-6 flex flex-col lg:flex-row gap-8">
-    
-    <div class="lg:w-2/3 space-y-6">
-        <header class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-900"><i class="fa-solid fa-layer-group text-blue-600 mr-2"></i>신영 웹 프로젝트</h1>
-            <p class="text-gray-500">지능형 실사 출력 주문 시스템</p>
-        </header>
-
-        <section class="bg-white p-6 rounded-2xl shadow-sm">
-            <h2 class="text-lg font-bold mb-4 flex items-center"><span class="bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded mr-2">STEP 1</span> 소재 선택</h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <label class="cursor-pointer group">
-                    <input type="radio" name="category" value="fabric" class="option-card hidden peer" onchange="updateUI('fabric')" checked>
-                    <div class="border-2 border-gray-200 rounded-xl p-4 text-center hover:border-blue-300 transition-all h-full relative">
-                        <i class="fa-solid fa-circle-check text-blue-600 absolute top-3 right-3 check-icon hidden"></i>
-                        <div class="text-3xl mb-2">🚩</div>
-                        <div class="font-bold">천 소재</div>
-                        <div class="text-xs text-gray-400 mt-1">현수막, 텐트천</div>
-                    </div>
-                </label>
-                <label class="cursor-pointer group">
-                    <input type="radio" name="category" value="adhesive" class="option-card hidden peer" onchange="updateUI('adhesive')">
-                    <div class="border-2 border-gray-200 rounded-xl p-4 text-center hover:border-blue-300 transition-all h-full relative">
-                        <i class="fa-solid fa-circle-check text-blue-600 absolute top-3 right-3 check-icon hidden"></i>
-                        <div class="text-3xl mb-2">🏷️</div>
-                        <div class="font-bold">점착 소재</div>
-                        <div class="text-xs text-gray-400 mt-1">스티커, 시트지</div>
-                    </div>
-                </label>
-                <label class="cursor-pointer group">
-                    <input type="radio" name="category" value="banner" class="option-card hidden peer" onchange="updateUI('banner')">
-                    <div class="border-2 border-gray-200 rounded-xl p-4 text-center hover:border-blue-300 transition-all h-full relative">
-                        <i class="fa-solid fa-circle-check text-blue-600 absolute top-3 right-3 check-icon hidden"></i>
-                        <div class="text-3xl mb-2">🖼️</div>
-                        <div class="font-bold">PET/배너</div>
-                        <div class="text-xs text-gray-400 mt-1">X배너, 백릿</div>
-                    </div>
-                </label>
-                <label class="cursor-pointer group">
-                    <input type="radio" name="category" value="board" class="option-card hidden peer" onchange="updateUI('board')">
-                    <div class="border-2 border-gray-200 rounded-xl p-4 text-center hover:border-blue-300 transition-all h-full relative">
-                        <i class="fa-solid fa-circle-check text-blue-600 absolute top-3 right-3 check-icon hidden"></i>
-                        <div class="text-3xl mb-2">📦</div>
-                        <div class="font-bold">보드류</div>
-                        <div class="text-xs text-gray-400 mt-1">폼보드, 포멕스</div>
-                    </div>
-                </label>
-            </div>
-            <div id="material-options" class="mt-6 flex flex-wrap gap-2"></div>
-        </section>
-
-        <section class="bg-white p-6 rounded-2xl shadow-sm">
-            <h2 class="text-lg font-bold mb-4 flex items-center"><span class="bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded mr-2">STEP 2</span> 사이즈 입력 (mm)</h2>
-            <div class="flex gap-6 items-center">
-                <div class="w-1/2">
-                    <label class="text-sm font-semibold text-gray-600 mb-1 block">가로 (Width)</label>
-                    <div class="relative">
-                        <input type="number" id="width" value="1000" class="w-full pl-4 pr-12 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none text-lg font-bold" oninput="updatePreview()">
-                        <span class="absolute right-4 top-3.5 text-gray-400 text-sm">mm</span>
-                    </div>
-                </div>
-                <div class="text-gray-300 text-xl">✕</div>
-                <div class="w-1/2">
-                    <label class="text-sm font-semibold text-gray-600 mb-1 block">세로 (Height)</label>
-                    <div class="relative">
-                        <input type="number" id="height" value="800" class="w-full pl-4 pr-12 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none text-lg font-bold" oninput="updatePreview()">
-                        <span class="absolute right-4 top-3.5 text-gray-400 text-sm">mm</span>
-                    </div>
-                </div>
-            </div>
-            <div id="width-warning" class="hidden mt-3 p-3 bg-orange-50 text-orange-700 rounded-lg text-sm flex items-start">
-                <i class="fa-solid fa-triangle-exclamation mt-0.5 mr-2"></i>
-                <div><strong>폭 1800mm 초과 감지:</strong> 원단 폭 제한으로 인해 분할 출력 후 미싱 연결 방식으로 제작됩니다.</div>
-            </div>
-        </section>
-
-        <section class="bg-white p-6 rounded-2xl shadow-sm">
-            <h2 class="text-lg font-bold mb-4 flex items-center"><span class="bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded mr-2">STEP 3</span> 후가공 옵션</h2>
-            <div id="finishing-options" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-        </section>
-    </div>
-
-    <div class="lg:w-1/3">
-        <div class="sticky top-6 space-y-6">
-            
-            <div class="bg-gray-800 rounded-2xl p-6 shadow-xl text-white overflow-hidden relative min-h-[350px] flex flex-col items-center justify-start">
-                <div class="w-full flex justify-between items-center mb-4">
-                    <div class="text-xs text-gray-400 font-mono">LIVE PREVIEW</div>
-                    <label class="cursor-pointer bg-gray-700 hover:bg-gray-600 text-xs px-3 py-1.5 rounded flex items-center transition-colors">
-                        <i class="fa-solid fa-camera mr-2"></i>이미지 업로드
-                        <input type="file" id="image-upload" accept="image/*" class="hidden" onchange="handleImageUpload(event)">
-                    </label>
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center cursor-pointer" onclick="showPage('home')">
+                    <i class="fa-solid fa-layer-group text-blue-600 text-2xl mr-2"></i>
+                    <span class="font-bold text-xl text-gray-900 tracking-tight">신영 웹 프로젝트</span>
                 </div>
                 
-                <div id="preview-stage" class="relative transition-all duration-500 flex items-center justify-center flex-grow">
-                    <div id="preview-object" class="bg-white text-gray-800 flex items-center justify-center font-bold text-sm shadow-lg relative overflow-hidden" style="width: 200px; height: 160px;">
-                        <span id="preview-text" class="z-10 text-gray-400">이미지 없음</span>
-                        <div id="preview-border" class="absolute inset-0 border-2 border-transparent z-20 pointer-events-none"></div>
-                        <div class="hole hole-tl absolute top-1 left-1 w-2 h-2 bg-gray-800 rounded-full hidden z-30"></div>
-                        <div class="hole hole-tr absolute top-1 right-1 w-2 h-2 bg-gray-800 rounded-full hidden z-30"></div>
-                        <div class="hole hole-bl absolute bottom-1 left-1 w-2 h-2 bg-gray-800 rounded-full hidden z-30"></div>
-                        <div class="hole hole-br absolute bottom-1 right-1 w-2 h-2 bg-gray-800 rounded-full hidden z-30"></div>
-                    </div>
+                <div class="hidden md:flex space-x-8 h-full">
+                    <button onclick="showPage('home')" id="nav-home" class="nav-item active inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 h-full border-b-2 border-transparent hover:text-blue-600">회사소개</button>
+                    <button onclick="showPage('products')" id="nav-products" class="nav-item inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 h-full border-b-2 border-transparent hover:text-blue-600">상품목록</button>
+                    <button onclick="showPage('order')" id="nav-order" class="nav-item inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 h-full border-b-2 border-transparent hover:text-blue-600">주문하기</button>
                 </div>
-                
-                <div class="mt-6 text-center w-full">
-                    <div class="text-gray-400 text-sm mb-1">예상 견적가 (VAT 별도)</div>
-                    <div id="total-price" class="text-4xl font-bold text-yellow-400">0원</div>
+
+                <div class="flex items-center space-x-4">
+                    <button onclick="showPage('cart')" class="relative p-2 text-gray-400 hover:text-gray-500">
+                        <i class="fa-solid fa-cart-shopping text-xl"></i>
+                        <span id="cart-badge" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/4 -translate-y-1/4 bg-red-600 rounded-full hidden">0</span>
+                    </button>
+                    <button class="flex items-center text-sm font-medium text-gray-700 hover:text-gray-800">
+                        <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mr-2"><i class="fa-solid fa-user"></i></div>
+                        <span>주해성 님</span>
+                    </button>
                 </div>
             </div>
-
-            <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-200">
-                <h3 class="font-bold text-gray-800 mb-3 flex items-center"><i class="fa-solid fa-list-check mr-2 text-green-500"></i>작업 파일 체크리스트</h3>
-                <ul class="text-sm space-y-2 text-gray-600">
-                    <li class="flex items-center"><i class="fa-solid fa-check text-green-500 mr-2"></i>색상 모드: CMYK 권장</li>
-                    <li class="flex items-center"><i class="fa-solid fa-check text-green-500 mr-2"></i>해상도: 1:1 기준 72~150dpi</li>
-                    <li class="flex items-center"><i class="fa-solid fa-check text-green-500 mr-2"></i>재단 여백: 사방 2mm 필수</li>
-                </ul>
-            </div>
-
-            <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg transition-transform transform hover:scale-105">
-                주문 시작하기
-            </button>
         </div>
-    </div>
-</div>
+    </nav>
 
-<script>
-    const db = {
-        fabric: {
-            label: "현수막/천",
-            materials: [{ name: "일반 현수막 (150D)", price: 5000 }, { name: "텐트천 (고급)", price: 8000 }],
-            finishing: [{ name: "열재단", price: 0, icon: "fa-scissors" }, { name: "사방 미싱", price: 3000, icon: "fa-border-all" }, { name: "금속 아일렛(타공)", price: 2000, icon: "fa-bullseye" }]
-        },
-        adhesive: {
-            label: "스티커/시트",
-            materials: [{ name: "유포지 (비신축)", price: 7000 }, { name: "PVC 켈지 (신축)", price: 10000 }],
-            finishing: [{ name: "사각 재단", price: 0, icon: "fa-square" }, { name: "모양 따기 (돔보)", price: 5000, icon: "fa-shapes" }]
-        },
-        banner: { label: "배너/PET", materials: [{ name: "PET 배너", price: 9000 }], finishing: [] },
-        board: { label: "보드류", materials: [{ name: "폼보드 5T", price: 12000 }], finishing: [] }
-    };
-
-    let currentCat = 'fabric';
-    let currentMatPrice = 5000;
-    let uploadedImage = null;
-
-    window.onload = () => updateUI('fabric');
-
-    function handleImageUpload(event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                uploadedImage = e.target.result;
-                updatePreview();
-            };
-            reader.readAsDataURL(file);
-        }
-    }
-
-    function updateUI(category) {
-        currentCat = category;
-        const data = db[category];
+    <main class="flex-grow">
         
-        const matContainer = document.getElementById('material-options');
-        matContainer.innerHTML = '';
-        data.materials.forEach((m, idx) => {
-            const checked = idx === 0 ? 'checked' : '';
-            if(idx===0) currentMatPrice = m.price;
-            matContainer.innerHTML += `
-                <label class="cursor-pointer">
-                    <input type="radio" name="material_detail" value="${m.price}" class="option-card hidden peer" onchange="setMatPrice(${m.price})" ${checked}>
-                    <div class="px-4 py-2 rounded-lg border border-gray-200 text-sm font-medium hover:bg-gray-50 peer-checked:bg-blue-600 peer-checked:text-white peer-checked:border-blue-600 transition-colors">
-                        ${m.name}
+        <section id="page-home" class="page-section active">
+            <div class="bg-gray-900 text-white relative overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-r from-blue-900 to-gray-900 opacity-90"></div>
+                <div class="relative max-w-7xl mx-auto py-24 px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center">
+                    <div class="md:w-1/2 mb-10 md:mb-0">
+                        <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">
+                            상상을 현실로 출력하다.<br>
+                            <span class="text-blue-400">신영 웹 프로젝트</span>
+                        </h1>
+                        <p class="text-xl text-gray-300 mb-8 max-w-lg">
+                            복잡한 실사 출력 주문, 이제 전문가가 아니어도 괜찮습니다. AI 기반 자동 견적 시스템으로 1초 만에 비용을 확인하고 주문하세요.
+                        </p>
+                        <button onclick="showPage('products')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition transform hover:scale-105">
+                            상품 전체보기
+                        </button>
                     </div>
-                </label>
-            `;
-        });
+                    <div class="md:w-1/2 flex justify-center">
+                        <img src="https://images.unsplash.com/photo-1562564055-71e051d33c19?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Printing Machine" class="rounded-xl shadow-2xl opacity-80 max-h-80 object-cover">
+                    </div>
+                </div>
+            </div>
 
-        const finContainer = document.getElementById('finishing-options');
-        finContainer.innerHTML = '';
-        if(data.finishing.length > 0) {
-            data.finishing.forEach(f => {
-                finContainer.innerHTML += `
-                    <label class="flex items-center justify-between p-4 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50 transition-colors">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mr-3">
-                                <i class="fa-solid ${f.icon}"></i>
-                            </div>
-                            <div><div class="font-bold text-sm text-gray-800">${f.name}</div><div class="text-xs text-gray-500">+${f.price.toLocaleString()}원</div></div>
+            <div class="max-w-7xl mx-auto py-16 px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900">왜 신영 웹 프로젝트인가요?</h2>
+                    <p class="mt-4 text-gray-500">차별화된 기술력과 시스템으로 최상의 결과물을 제공합니다.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 text-center hover:shadow-md transition">
+                        <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                            <i class="fa-solid fa-calculator"></i>
                         </div>
-                        <input type="checkbox" class="w-5 h-5 text-blue-600 rounded focus:ring-blue-500" value="${f.price}" onchange="updatePreview()">
+                        <h3 class="text-xl font-bold mb-2">실시간 자동 견적</h3>
+                        <p class="text-gray-500">기다릴 필요 없습니다. 사이즈와 옵션만 입력하면 AI가 즉시 정확한 견적을 산출합니다.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 text-center hover:shadow-md transition">
+                        <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                            <i class="fa-solid fa-check-double"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">데이터 자동 검수</h3>
+                        <p class="text-gray-500">해상도, 색상 모드, 재단 여백 등 출력 사고를 유발하는 요소를 사전에 차단합니다.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 text-center hover:shadow-md transition">
+                        <div class="w-16 h-16 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                            <i class="fa-solid fa-truck-fast"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">최적 물류 시스템</h3>
+                        <p class="text-gray-500">제품 크기에 따라 택배, 화물, 퀵 등 가장 안전하고 저렴한 배송 방법을 자동 매칭합니다.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="page-products" class="page-section max-w-7xl mx-auto py-12 px-4">
+            <h2 class="text-2xl font-bold mb-8">전체 상품 목록</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition group">
+                    <div class="h-48 bg-gray-200 relative overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=500&q=60" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    </div>
+                    <div class="p-5">
+                        <div class="text-xs text-blue-600 font-bold mb-1">BEST SELLER</div>
+                        <h3 class="font-bold text-lg mb-2">대형 현수막</h3>
+                        <p class="text-gray-500 text-sm mb-4">이벤트, 행사용 150D 고발색 원단</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold">5,000원~</span>
+                            <button onclick="selectProductAndGo('fabric')" class="bg-gray-900 text-white px-4 py-2 rounded text-sm hover:bg-gray-700">주문하기</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition group">
+                    <div class="h-48 bg-gray-200 relative overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1589308078059-be1415eab4c3?auto=format&fit=crop&w=500&q=60" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    </div>
+                    <div class="p-5">
+                        <div class="text-xs text-green-600 font-bold mb-1">NEW</div>
+                        <h3 class="font-bold text-lg mb-2">맞춤 스티커/라벨</h3>
+                        <p class="text-gray-500 text-sm mb-4">모양 따기(돔보) 가공 가능</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold">7,000원~</span>
+                            <button onclick="selectProductAndGo('adhesive')" class="bg-gray-900 text-white px-4 py-2 rounded text-sm hover:bg-gray-700">주문하기</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition group">
+                    <div class="h-48 bg-gray-200 relative overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1628191011353-5c9163aa96e1?auto=format&fit=crop&w=500&q=60" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    </div>
+                    <div class="p-5">
+                        <div class="text-xs text-purple-600 font-bold mb-1">PREMIUM</div>
+                        <h3 class="font-bold text-lg mb-2">X배너 / PET</h3>
+                        <p class="text-gray-500 text-sm mb-4">매장 홍보 필수템, 거치대 별매</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold">9,000원~</span>
+                            <button onclick="selectProductAndGo('banner')" class="bg-gray-900 text-white px-4 py-2 rounded text-sm hover:bg-gray-700">주문하기</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition group">
+                    <div class="h-48 bg-gray-200 relative overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?auto=format&fit=crop&w=500&q=60" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    </div>
+                    <div class="p-5">
+                        <div class="text-xs text-gray-500 font-bold mb-1">RIGID</div>
+                        <h3 class="font-bold text-lg mb-2">폼보드 / 포멕스</h3>
+                        <p class="text-gray-500 text-sm mb-4">전시회, 등신대 제작용 판재</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold">12,000원~</span>
+                            <button onclick="selectProductAndGo('board')" class="bg-gray-900 text-white px-4 py-2 rounded text-sm hover:bg-gray-700">주문하기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="page-order" class="page-section max-w-7xl mx-auto py-8 px-4">
+            <div class="flex flex-col lg:flex-row gap-8">
+                <div class="lg:w-2/3 space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
+                        <h2 class="text-lg font-bold mb-4 flex items-center text-gray-800"><span class="bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded mr-2">STEP 1</span> 소재 선택</h2>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            <label class="cursor-pointer group">
+                                <input type="radio" name="category" value="fabric" class="option-card hidden peer" onchange="updateUI('fabric')" checked>
+                                <div class="border-2 border-gray-100 rounded-xl p-3 text-center hover:border-blue-300 transition-all h-full relative">
+                                    <i class="fa-solid fa-circle-check text-blue-600 absolute top-2 right-2 check-icon hidden text-xs"></i>
+                                    <div class="text-2xl mb-1">🚩</div>
+                                    <div class="font-bold text-sm">천 소재</div>
+                                </div>
+                            </label>
+                            <label class="cursor-pointer group">
+                                <input type="radio" name="category" value="adhesive" class="option-card hidden peer" onchange="updateUI('adhesive')">
+                                <div class="border-2 border-gray-100 rounded-xl p-3 text-center hover:border-blue-300 transition-all h-full relative">
+                                    <i class="fa-solid fa-circle-check text-blue-600 absolute top-2 right-2 check-icon hidden text-xs"></i>
+                                    <div class="text-2xl mb-1">🏷️</div>
+                                    <div class="font-bold text-sm">점착 소재</div>
+                                </div>
+                            </label>
+                            <label class="cursor-pointer group">
+                                <input type="radio" name="category" value="banner" class="option-card hidden peer" onchange="updateUI('banner')">
+                                <div class="border-2 border-gray-100 rounded-xl p-3 text-center hover:border-blue-300 transition-all h-full relative">
+                                    <i class="fa-solid fa-circle-check text-blue-600 absolute top-2 right-2 check-icon hidden text-xs"></i>
+                                    <div class="text-2xl mb-1">🖼️</div>
+                                    <div class="font-bold text-sm">PET/배너</div>
+                                </div>
+                            </label>
+                            <label class="cursor-pointer group">
+                                <input type="radio" name="category" value="board" class="option-card hidden peer" onchange="updateUI('board')">
+                                <div class="border-2 border-gray-100 rounded-xl p-3 text-center hover:border-blue-300 transition-all h-full relative">
+                                    <i class="fa-solid fa-circle-check text-blue-600 absolute top-2 right-2 check-icon hidden text-xs"></i>
+                                    <div class="text-2xl mb-1">📦</div>
+                                    <div class="font-bold text-sm">보드류</div>
+                                </div>
+                            </label>
+                        </div>
+                        <div id="material-options" class="mt-4 flex flex-wrap gap-2"></div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
+                        <h2 class="text-lg font-bold mb-4 flex items-center text-gray-800"><span class="bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded mr-2">STEP 2</span> 사이즈 입력 (mm)</h2>
+                        <div class="flex gap-4 items-center">
+                            <div class="w-1/2 relative">
+                                <input type="number" id="width" value="1000" class="w-full pl-3 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none font-bold" oninput="updatePreview()">
+                                <span class="absolute right-3 top-3.5 text-gray-400 text-sm">W</span>
+                            </div>
+                            <div class="text-gray-300">✕</div>
+                            <div class="w-1/2 relative">
+                                <input type="number" id="height" value="800" class="w-full pl-3 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none font-bold" oninput="updatePreview()">
+                                <span class="absolute right-3 top-3.5 text-gray-400 text-sm">H</span>
+                            </div>
+                        </div>
+                        <div id="width-warning" class="hidden mt-3 p-3 bg-orange-50 text-orange-700 rounded-lg text-sm flex items-start">
+                            <i class="fa-solid fa-triangle-exclamation mt-0.5 mr-2"></i>
+                            <div><strong>폭 1800mm 초과:</strong> 분할 출력 후 미싱 연결 방식으로 제작됩니다.</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
+                        <h2 class="text-lg font-bold mb-4 flex items-center text-gray-800"><span class="bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded mr-2">STEP 3</span> 후가공 옵션</h2>
+                        <div id="finishing-options" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+                    </div>
+                </div>
+
+                <div class="lg:w-1/3">
+                    <div class="sticky top-24 space-y-6">
+                        <div class="bg-gray-800 rounded-2xl p-6 shadow-xl text-white relative flex flex-col items-center min-h-[300px]">
+                            <div class="w-full flex justify-between items-center mb-4 z-10">
+                                <div class="text-xs text-gray-400 font-mono">LIVE PREVIEW</div>
+                                <label class="cursor-pointer bg-gray-700 hover:bg-gray-600 text-xs px-3 py-1.5 rounded flex items-center transition-colors">
+                                    <i class="fa-solid fa-camera mr-2"></i>파일 업로드
+                                    <input type="file" id="image-upload" accept="image/*" class="hidden" onchange="handleImageUpload(event)">
+                                </label>
+                            </div>
+                            
+                            <div id="preview-stage" class="relative transition-all duration-500 flex items-center justify-center flex-grow w-full">
+                                <div id="preview-object" class="bg-white text-gray-800 flex items-center justify-center font-bold text-sm shadow-lg relative overflow-hidden transition-all" style="width: 200px; height: 160px;">
+                                    <span id="preview-text" class="z-10 text-gray-400">이미지 없음</span>
+                                    <div id="preview-border" class="absolute inset-0 border-2 border-transparent z-20 pointer-events-none"></div>
+                                    <div class="hole hole-tl absolute top-1 left-1 w-2 h-2 bg-gray-800 rounded-full hidden z-30"></div>
+                                    <div class="hole hole-tr absolute top-1 right-1 w-2 h-2 bg-gray-800 rounded-full hidden z-30"></div>
+                                    <div class="hole hole-bl absolute bottom-1 left-1 w-2 h-2 bg-gray-800 rounded-full hidden z-30"></div>
+                                    <div class="hole hole-br absolute bottom-1 right-1 w-2 h-2 bg-gray-800 rounded-full hidden z-30"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-6 text-center w-full z-10">
+                                <div class="text-gray-400 text-sm mb-1">최종 결제 금액 (VAT 별도)</div>
+                                <div id="total-price" class="text-3xl font-bold text-yellow-400">0원</div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-200">
+                            <h3 class="font-bold text-gray-800 mb-2 text-sm flex items-center"><i class="fa-solid fa-list-check mr-2 text-green-600"></i>작업 파일 체크</h3>
+                            <ul class="text-xs space-y-1.5 text-gray-600">
+                                <li><i class="fa-solid fa-check text-green-500 mr-1.5"></i>색상 모드: CMYK 권장</li>
+                                <li><i class="fa-solid fa-check text-green-500 mr-1.5"></i>해상도: 1:1 기준 72~150dpi</li>
+                                <li><i class="fa-solid fa-check text-green-500 mr-1.5"></i>재단 여백: 사방 2mm</li>
+                            </ul>
+                        </div>
+
+                        <button onclick="addToCart()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg transition transform active:scale-95 flex justify-center items-center">
+                            <i class="fa-solid fa-cart-plus mr-2"></i>장바구니 담기
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="page-cart" class="page-section max-w-5xl mx-auto py-12 px-4">
+            <h2 class="text-2xl font-bold mb-8">장바구니 <span id="cart-count-title" class="text-blue-600 text-lg ml-2">(0)</span></h2>
+            
+            <div id="cart-empty" class="text-center py-20 bg-white rounded-xl border border-gray-200">
+                <i class="fa-solid fa-cart-arrow-down text-6xl text-gray-200 mb-4"></i>
+                <p class="text-gray-500 text-lg">장바구니가 비어있습니다.</p>
+                <button onclick="showPage('order')" class="mt-6 text-blue-600 font-semibold hover:underline">주문하러 가기</button>
+            </div>
+
+            <div id="cart-items-container" class="hidden space-y-4">
+                </div>
+
+            <div id="cart-summary" class="hidden mt-8 bg-white p-6 rounded-xl border border-gray-200 flex justify-end items-center gap-6">
+                <div class="text-right">
+                    <div class="text-gray-500 text-sm">총 결제 예정 금액</div>
+                    <div id="cart-grand-total" class="text-2xl font-bold text-gray-900">0원</div>
+                </div>
+                <button class="bg-gray-900 text-white px-8 py-3 rounded-lg font-bold hover:bg-gray-800">주문하기</button>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 mt-12 py-10">
+        <div class="max-w-7xl mx-auto px-4 text-center text-gray-500 text-sm">
+            <p class="mb-2"><strong>(주)신영 웹 프로젝트</strong> | 대표: 주해성 | 사업자등록번호: 123-45-67890</p>
+            <p>Copyright © 2026 Shinyoung Web Project. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- 1. 라우팅 로직 ---
+        function showPage(pageId) {
+            // 1) 모든 섹션 숨김
+            document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
+            // 2) 타겟 섹션 보임
+            document.getElementById('page-' + pageId).classList.add('active');
+            
+            // 3) 네비게이션 활성 상태 변경
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            const navBtn = document.getElementById('nav-' + pageId);
+            if(navBtn) navBtn.classList.add('active');
+            
+            // 4) 스크롤 최상단 이동
+            window.scrollTo(0, 0);
+        }
+
+        function selectProductAndGo(category) {
+            showPage('order');
+            // 라디오 버튼 강제 클릭 트리거
+            const radio = document.querySelector(`input[name="category"][value="${category}"]`);
+            if(radio) {
+                radio.checked = true;
+                updateUI(category);
+            }
+        }
+
+        // --- 2. 주문 시스템 로직 (Visual Estimator) ---
+        const db = {
+            fabric: {
+                label: "현수막/천",
+                materials: [{ name: "일반 현수막 (150D)", price: 5000 }, { name: "텐트천 (고급)", price: 8000 }],
+                finishing: [{ name: "열재단", price: 0, icon: "fa-scissors" }, { name: "사방 미싱", price: 3000, icon: "fa-border-all" }, { name: "금속 아일렛(타공)", price: 2000, icon: "fa-bullseye" }]
+            },
+            adhesive: {
+                label: "스티커/시트",
+                materials: [{ name: "유포지 (비신축)", price: 7000 }, { name: "PVC 켈지 (신축)", price: 10000 }],
+                finishing: [{ name: "사각 재단", price: 0, icon: "fa-square" }, { name: "모양 따기 (돔보)", price: 5000, icon: "fa-shapes" }]
+            },
+            banner: { label: "배너/PET", materials: [{ name: "PET 배너", price: 9000 }], finishing: [] },
+            board: { label: "보드류", materials: [{ name: "폼보드 5T", price: 12000 }], finishing: [] }
+        };
+
+        let currentCat = 'fabric';
+        let currentMatPrice = 5000;
+        let currentMatName = "일반 현수막 (150D)";
+        let uploadedImage = null;
+        let finalPrice = 0;
+
+        // 초기화
+        window.onload = () => { updateUI('fabric'); };
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadedImage = e.target.result;
+                    updatePreview();
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function updateUI(category) {
+            currentCat = category;
+            const data = db[category];
+            
+            // 소재 렌더링
+            const matContainer = document.getElementById('material-options');
+            matContainer.innerHTML = '';
+            data.materials.forEach((m, idx) => {
+                const checked = idx === 0 ? 'checked' : '';
+                if(idx===0) { currentMatPrice = m.price; currentMatName = m.name; }
+                matContainer.innerHTML += `
+                    <label class="cursor-pointer">
+                        <input type="radio" name="material_detail" value="${m.price}" class="option-card hidden peer" onchange="setMatPrice(${m.price}, '${m.name}')" ${checked}>
+                        <div class="px-3 py-2 rounded-lg border border-gray-200 text-xs font-medium hover:bg-gray-50 peer-checked:bg-blue-600 peer-checked:text-white peer-checked:border-blue-600 transition-colors">
+                            ${m.name}
+                        </div>
                     </label>
                 `;
             });
-        } else {
-            finContainer.innerHTML = '<div class="text-gray-400 text-sm col-span-2 p-4 text-center bg-gray-50 rounded-lg">선택 가능한 후가공 옵션이 없습니다.</div>';
-        }
-        updatePreview();
-    }
 
-    function setMatPrice(price) {
-        currentMatPrice = price;
-        updatePreview();
-    }
-
-    function updatePreview() {
-        const w = parseInt(document.getElementById('width').value) || 0;
-        const h = parseInt(document.getElementById('height').value) || 0;
-
-        // 견적 계산
-        const area = (w * h) / 1000000;
-        const baseCost = Math.round(area * currentMatPrice);
-        let addCost = 0;
-        const checks = document.querySelectorAll('#finishing-options input:checked');
-        checks.forEach(c => addCost += parseInt(c.value));
-        const total = (baseCost < 3000 ? 3000 : baseCost) + addCost;
-        document.getElementById('total-price').innerText = total.toLocaleString() + '원';
-
-        // 프리뷰
-        const maxPx = 240;
-        const ratio = w / h;
-        let pW, pH;
-        if (ratio > 1) { pW = maxPx; pH = maxPx / ratio; } else { pH = maxPx; pW = maxPx * ratio; }
-
-        const pObj = document.getElementById('preview-object');
-        const pText = document.getElementById('preview-text');
-        pObj.style.width = `${pW}px`;
-        pObj.style.height = `${pH}px`;
-
-        if (uploadedImage) {
-            pObj.style.backgroundImage = `url('${uploadedImage}')`;
-            pText.style.display = 'none';
-        } else {
-            pObj.style.backgroundImage = 'none';
-            pText.style.display = 'block';
+            // 후가공 렌더링
+            const finContainer = document.getElementById('finishing-options');
+            finContainer.innerHTML = '';
+            if(data.finishing.length > 0) {
+                data.finishing.forEach(f => {
+                    finContainer.innerHTML += `
+                        <label class="flex items-center justify-between p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mr-3 text-sm">
+                                    <i class="fa-solid ${f.icon}"></i>
+                                </div>
+                                <div><div class="font-bold text-sm text-gray-800">${f.name}</div><div class="text-xs text-gray-500">+${f.price.toLocaleString()}원</div></div>
+                            </div>
+                            <input type="checkbox" name="finish_opt" class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500" value="${f.price}" data-name="${f.name}" onchange="updatePreview()">
+                        </label>
+                    `;
+                });
+            } else {
+                finContainer.innerHTML = '<div class="text-gray-400 text-xs col-span-2 p-3 text-center bg-gray-50 rounded-lg">선택 가능한 후가공 옵션이 없습니다.</div>';
+            }
+            updatePreview();
         }
 
-        // 경고 및 후가공 시각화
-        const warn = document.getElementById('width-warning');
-        const borderDiv = document.getElementById('preview-border');
-        const holes = document.querySelectorAll('.hole');
-        
-        warn.classList.toggle('hidden', !(w > 1800 && currentCat === 'fabric'));
-        pObj.style.borderRight = (w > 1800 && currentCat === 'fabric') ? "2px dashed red" : "none";
+        function setMatPrice(price, name) {
+            currentMatPrice = price;
+            currentMatName = name;
+            updatePreview();
+        }
 
-        borderDiv.className = 'absolute inset-0 border-2 border-transparent z-20 pointer-events-none';
-        holes.forEach(h => h.classList.add('hidden'));
+        function updatePreview() {
+            const w = parseInt(document.getElementById('width').value) || 0;
+            const h = parseInt(document.getElementById('height').value) || 0;
 
-        checks.forEach(input => {
-            const label = input.closest('label').innerText;
-            if(label.includes('미싱')) borderDiv.className = 'absolute inset-0 border-4 border-dashed border-white z-20 pointer-events-none opacity-70';
-            if(label.includes('아일렛')) holes.forEach(h => h.classList.remove('hidden'));
-        });
-    }
-</script>
+            // 가격 계산
+            const area = (w * h) / 1000000;
+            const baseCost = Math.round(area * currentMatPrice);
+            let addCost = 0;
+            const checks = document.querySelectorAll('input[name="finish_opt"]:checked');
+            checks.forEach(c => addCost += parseInt(c.value));
+            
+            finalPrice = (baseCost < 3000 ? 3000 : baseCost) + addCost;
+            document.getElementById('total-price').innerText = finalPrice.toLocaleString() + '원';
+
+            // 프리뷰 시각화
+            const maxPx = 240;
+            const ratio = w / h;
+            let pW, pH;
+            if (ratio > 1) { pW = maxPx; pH = maxPx / ratio; } else { pH = maxPx; pW = maxPx * ratio; }
+
+            const pObj = document.getElementById('preview-object');
+            const pText = document.getElementById('preview-text');
+            pObj.style.width = `${pW}px`;
+            pObj.style.height = `${pH}px`;
+
+            if (uploadedImage) {
+                pObj.style.backgroundImage = `url('${uploadedImage}')`;
+                pText.style.display = 'none';
+            } else {
+                pObj.style.backgroundImage = 'none';
+                pText.style.display = 'block';
+            }
+
+            // 시각적 피드백
+            const warn = document.getElementById('width-warning');
+            const borderDiv = document.getElementById('preview-border');
+            const holes = document.querySelectorAll('.hole');
+            
+            warn.classList.toggle('hidden', !(w > 1800 && currentCat === 'fabric'));
+            pObj.style.borderRight = (w > 1800 && currentCat === 'fabric') ? "2px dashed red" : "none";
+
+            borderDiv.className = 'absolute inset-0 border-2 border-transparent z-20 pointer-events-none';
+            holes.forEach(h => h.classList.add('hidden'));
+
+            checks.forEach(input => {
+                const label = input.getAttribute('data-name');
+                if(label && label.includes('미싱')) borderDiv.className = 'absolute inset-0 border-4 border-dashed border-white z-20 pointer-events-none opacity-70 shadow-inner';
+                if(label && label.includes('아일렛')) holes.forEach(h => h.classList.remove('hidden'));
+            });
+        }
+
+        // --- 3. 장바구니 로직 ---
+        let cartItems = [];
+
+        function addToCart() {
+            const w = document.getElementById('width').value;
+            const h = document.getElementById('height').value;
+            const finishOpts = Array.from(document.querySelectorAll('input[name="finish_opt"]:checked')).map(el => el.getAttribute('data-name')).join(', ');
+
+            const item = {
+                id: Date.now(),
+                category: db[currentCat].label,
+                material: currentMatName,
+                size: `${w} x ${h} mm`,
+                options: finishOpts || "후가공 없음",
+                price: finalPrice,
+                image: uploadedImage // 미리보기 이미지 전달
+            };
+
+            cartItems.push(item);
+            renderCart();
+            showPage('cart'); // 장바구니 페이지로 이동
+            
+            // 뱃지 업데이트
+            const badge = document.getElementById('cart-badge');
+            badge.innerText = cartItems.length;
+            badge.classList.remove('hidden');
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cart-items-container');
+            const emptyMsg = document.getElementById('cart-empty');
+            const summary = document.getElementById('cart-summary');
+            const grandTotalEl = document.getElementById('cart-grand-total');
+            const countTitle = document.getElementById('cart-count-title');
+
+            container.innerHTML = '';
+            let grandTotal = 0;
+
+            if (cartItems.length === 0) {
+                emptyMsg.classList.remove('hidden');
+                container.classList.add('hidden');
+                summary.classList.add('hidden');
+                countTitle.innerText = `(0)`;
+            } else {
+                emptyMsg.classList.add('hidden');
+                container.classList.remove('hidden');
+                summary.classList.remove('hidden'); // flex는 클래스 제거로 처리됨
+                summary.style.display = 'flex';
+                
+                countTitle.innerText = `(${cartItems.length})`;
+
+                cartItems.forEach((item, index) => {
+                    grandTotal += item.price;
+                    const imgHtml = item.image 
+                        ? `<div class="w-20 h-20 bg-gray-100 rounded-lg bg-cover bg-center" style="background-image: url('${item.image}')"></div>`
+                        : `<div class="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400"><i class="fa-solid fa-image"></i></div>`;
+
+                    container.innerHTML += `
+                        <div class="bg-white p-4 rounded-xl border border-gray-200 flex items-center justify-between gap-4 animate-fade-in">
+                            <div class="flex items-center gap-4">
+                                ${imgHtml}
+                                <div>
+                                    <div class="text-xs text-blue-600 font-bold mb-0.5">${item.category}</div>
+                                    <div class="font-bold text-gray-900">${item.material}</div>
+                                    <div class="text-sm text-gray-500 mt-1">규격: ${item.size}</div>
+                                    <div class="text-xs text-gray-400 mt-0.5">옵션: ${item.options}</div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="font-bold text-lg mb-2">${item.price.toLocaleString()}원</div>
+                                <button onclick="removeCartItem(${index})" class="text-xs text-red-500 hover:text-red-700 underline">삭제</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                grandTotalEl.innerText = grandTotal.toLocaleString() + '원';
+            }
+        }
+
+        function removeCartItem(index) {
+            cartItems.splice(index, 1);
+            renderCart();
+            
+            const badge = document.getElementById('cart-badge');
+            badge.innerText = cartItems.length;
+            if(cartItems.length === 0) badge.classList.add('hidden');
+        }
+    </script>
 </body>
 </html>
