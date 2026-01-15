@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PrintFlow AI - Visual Estimator with Mockup</title>
+    <title>PrintFlow AI - Visual Estimator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;600;700&display=swap');
         body { font-family: 'Pretendard', sans-serif; }
         
-        /* 커스텀 라디오/체크박스 스타일 */
         .option-card:checked + div {
             border-color: #2563EB;
             background-color: #EFF6FF;
@@ -18,8 +17,6 @@
             box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.1), 0 2px 4px -1px rgba(37, 99, 235, 0.06);
         }
         .option-card:checked + div .check-icon { display: block; }
-        
-        /* 프리뷰 영역 애니메이션 */
         .preview-box { transition: all 0.3s ease; }
         #preview-object { background-size: cover; background-position: center; }
     </style>
@@ -98,7 +95,7 @@
             </div>
             <div id="width-warning" class="hidden mt-3 p-3 bg-orange-50 text-orange-700 rounded-lg text-sm flex items-start">
                 <i class="fa-solid fa-triangle-exclamation mt-0.5 mr-2"></i>
-                [cite_start]<div><strong>폭 1800mm 초과 감지:</strong> 원단 폭 제한으로 인해 분할 출력 후 미싱 연결 방식으로 제작됩니다. [cite: 29-30]</div>
+                <div><strong>폭 1800mm 초과 감지:</strong> 원단 폭 제한으로 인해 분할 출력 후 미싱 연결 방식으로 제작됩니다.</div>
             </div>
         </section>
 
@@ -138,7 +135,7 @@
             </div>
 
             <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-200">
-                [cite_start]<h3 class="font-bold text-gray-800 mb-3 flex items-center"><i class="fa-solid fa-list-check mr-2 text-green-500"></i>작업 파일 체크리스트 [cite: 104-106]</h3>
+                <h3 class="font-bold text-gray-800 mb-3 flex items-center"><i class="fa-solid fa-list-check mr-2 text-green-500"></i>작업 파일 체크리스트</h3>
                 <ul class="text-sm space-y-2 text-gray-600">
                     <li class="flex items-center"><i class="fa-solid fa-check text-green-500 mr-2"></i>색상 모드: CMYK 권장</li>
                     <li class="flex items-center"><i class="fa-solid fa-check text-green-500 mr-2"></i>해상도: 1:1 기준 72~150dpi</li>
@@ -154,7 +151,6 @@
 </div>
 
 <script>
-    // 데이터 정의 (이전과 동일)
     const db = {
         fabric: {
             label: "현수막/천",
@@ -172,18 +168,17 @@
 
     let currentCat = 'fabric';
     let currentMatPrice = 5000;
-    let uploadedImage = null; // 업로드된 이미지 저장 변수
+    let uploadedImage = null;
 
     window.onload = () => updateUI('fabric');
 
-    // 이미지 업로드 처리 함수
     function handleImageUpload(event) {
         const file = event.target.files[0];
         if (file) {
             const reader = new FileReader();
             reader.onload = function(e) {
                 uploadedImage = e.target.result;
-                updatePreview(); // 이미지 로드 후 프리뷰 업데이트
+                updatePreview();
             };
             reader.readAsDataURL(file);
         }
@@ -193,7 +188,6 @@
         currentCat = category;
         const data = db[category];
         
-        // 소재 버튼 생성
         const matContainer = document.getElementById('material-options');
         matContainer.innerHTML = '';
         data.materials.forEach((m, idx) => {
@@ -209,7 +203,6 @@
             `;
         });
 
-        // 후가공 옵션 생성
         const finContainer = document.getElementById('finishing-options');
         finContainer.innerHTML = '';
         if(data.finishing.length > 0) {
@@ -241,7 +234,7 @@
         const w = parseInt(document.getElementById('width').value) || 0;
         const h = parseInt(document.getElementById('height').value) || 0;
 
-        // 1. 견적 계산
+        // 견적 계산
         const area = (w * h) / 1000000;
         const baseCost = Math.round(area * currentMatPrice);
         let addCost = 0;
@@ -250,7 +243,7 @@
         const total = (baseCost < 3000 ? 3000 : baseCost) + addCost;
         document.getElementById('total-price').innerText = total.toLocaleString() + '원';
 
-        // 2. 프리뷰 시각화
+        // 프리뷰
         const maxPx = 240;
         const ratio = w / h;
         let pW, pH;
@@ -261,16 +254,15 @@
         pObj.style.width = `${pW}px`;
         pObj.style.height = `${pH}px`;
 
-        // 이미지 합성 로직
         if (uploadedImage) {
             pObj.style.backgroundImage = `url('${uploadedImage}')`;
-            pText.style.display = 'none'; // 이미지가 있으면 텍스트 숨김
+            pText.style.display = 'none';
         } else {
             pObj.style.backgroundImage = 'none';
             pText.style.display = 'block';
         }
 
-        // 1800mm 경고 및 후가공 시각화
+        // 경고 및 후가공 시각화
         const warn = document.getElementById('width-warning');
         const borderDiv = document.getElementById('preview-border');
         const holes = document.querySelectorAll('.hole');
